@@ -1,3 +1,4 @@
+|-- .gitignore
 |-- ai-service
     |-- .env
     |-- .ipynb_checkpoints
@@ -94,26 +95,6 @@
                         |-- chroma.sqlite3
                 |-- __pycache__
                     |-- github_rag_pipeline.cpython-314.pyc
-            |-- pdf_rag
-                |-- ingestion
-                    |-- embedder.py
-                    |-- ingestion.py
-                    |-- loader.py
-                    |-- splitter.py
-                    |-- __pycache__
-                        |-- splitter.cpython-314.pyc
-                |-- pdf_rag_pipeline.py
-                |-- retrieval
-                    |-- generation.py
-                    |-- retrieval.py
-                    |-- retrievers
-                        |-- base_retriever.py
-                        |-- cc_retriever.py
-                        |-- mq_retriever.py
-                        |-- __pycache__
-                            |-- base_retriever.cpython-314.pyc
-                            |-- cc_retriever.cpython-314.pyc
-                |-- vectorstore
             |-- websearch_tool.py
             |-- __pycache__
                 |-- websearch_tool.cpython-314.pyc

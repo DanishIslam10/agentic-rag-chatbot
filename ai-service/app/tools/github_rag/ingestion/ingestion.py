@@ -3,8 +3,8 @@ from fastapi import HTTPException, UploadFile
 from langsmith import traceable
 from langchain_community.document_loaders import PyPDFLoader
 
-from app.tools.pdf_rag.ingestion.splitter import split_documents
-from app.tools.pdf_rag.ingestion.embedder import create_vector_store
+from app.tools.github_rag.ingestion.splitter import split_documents
+from app.tools.github_rag.ingestion.embedder import create_vector_store
 
 
 # Base folder for uploaded PDFs
