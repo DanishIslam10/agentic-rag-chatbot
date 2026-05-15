@@ -6,6 +6,8 @@ export const createMessageService = async (data) => {
 
     const { chat,sessionId, content, role } = data;
 
+    console.log("message service data:\n", data)
+
     if (!chat || !sessionId || !content || !role) {
         const error = new Error("Message Information is incomplete");
         error.statusCode = 400;

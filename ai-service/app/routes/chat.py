@@ -12,7 +12,11 @@ router = APIRouter()
 
 
 @router.post("/api/ai-service/chat-message")
-async def chat(message:str = Form(...),thread_id: str = Form(...),user_id: str = Form(...),files: list[UploadFile] | None = File(None)):
+async def chat(data:MessageSchema):
+    
+    thread_id = data.thread_id
+    message = data.message
+    user_id = data.user_id
 
     config = {
         "configurable": {
@@ -23,19 +27,19 @@ async def chat(message:str = Form(...),thread_id: str = Form(...),user_id: str =
 
     pdf_paths = []
 
-    # save uploaded pdfs if present
-    if files:
+    # # save uploaded pdfs if present
+    # if files:
 
-        for file in files:
+    #     for file in files:
 
-            file_path = f"app/tools/pdf_rag/uploads/{file.filename}"
+    #         file_path = f"app/tools/pdf_rag/uploads/{file.filename}"
 
-            content = await file.read()
+    #         content = await file.read()
 
-            with open(file_path, "wb") as f:
-                f.write(content)
+    #         with open(file_path, "wb") as f:
+    #             f.write(content)
 
-            pdf_paths.append(file_path)
+    #         pdf_paths.append(file_path)
 
     chatbot_workflow, checkpointer_cm = await build_graph()
 

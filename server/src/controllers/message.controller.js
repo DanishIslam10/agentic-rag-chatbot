@@ -4,13 +4,21 @@ import { getChatTitleService } from "../services/chatTitle.service.js";
 import { createMessageService } from "../services/message.service.js";
 
 export const sendMessage = async (req, res) => {
-    const { sessionId, chat, content } = req.body; // 'content' and 'role' is also provided by the client
+    const { sessionId, chat, content, role } = req.body; // 'content' and 'role' is also provided by the client
     const { id } = req.user  //this "id" is user's mongo document id.
-    // console.log("userid:\n", id)
+
+    if (!content) {
+        return res.status(400).json({
+            success: false,
+            message: "Message content is required"
+        })
+    }
+
     try {
         let humanMessage = {
             ...req.body,
-            user_id:id,
+            user_id: id,
+            role: role || "human"
         };
         //if this is the first message by the user then sessionId and chat (id of chat document) will not be present
         if (!sessionId || !chat) {
@@ -20,12 +28,13 @@ export const sendMessage = async (req, res) => {
             const newChatSession = await createChatService(id,chatTitle);
             humanMessage = {
                 ...req.body,
-                user_id:id,
+                user_id: id,
+                role: role || "human",
                 sessionId: newChatSession.chat.sessionId,
                 chat: newChatSession.chat._id
             }
         }
-        // console.log("human message:\n", humanMessage)
+        console.log("human message:\n", humanMessage)
 
         const aiChatbotResponse = await chatbotService(humanMessage);
 

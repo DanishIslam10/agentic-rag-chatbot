@@ -8,7 +8,7 @@ export const chatbotService = async (data) => {
         "user_id":String(data.user_id)
     }
 
-    // console.log("payload:\n",payload)
+    console.log("chatbot service payload:\n", payload)
 
     if (!payload.message || !payload.thread_id || !payload.user_id) {
        const error = new Error("message info for ai-chatbot-service is incomplete.")
@@ -20,6 +20,7 @@ export const chatbotService = async (data) => {
 
         const response = await axios.post(`${process.env.AI_SERVICE_URL}/chat-message`,payload);
 
+        console.log("chatbot service response:\n",response.data)
         return response.data
 
     } catch (error) {

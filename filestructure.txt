@@ -87,7 +87,7 @@
                         |-- retrieval.cpython-314.pyc
                 |-- vectorstore
                     |-- chroma_db
-                        |-- 886c2baa-25f0-42e4-915e-9595650dddf1
+                        |-- 96ab2e4c-15a0-483b-b17a-3d6ae2f6722c
                             |-- data_level0.bin
                             |-- header.bin
                             |-- length.bin
@@ -95,6 +95,8 @@
                         |-- chroma.sqlite3
                 |-- __pycache__
                     |-- github_rag_pipeline.cpython-314.pyc
+            |-- pdf_rag
+                |-- pdfs
             |-- websearch_tool.py
             |-- __pycache__
                 |-- websearch_tool.cpython-314.pyc

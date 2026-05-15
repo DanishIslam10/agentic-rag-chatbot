@@ -1,103 +1,157 @@
 from pathlib import Path
-from fastapi import HTTPException, UploadFile
+import shutil
+from fastapi import HTTPException
 from langsmith import traceable
-from langchain_community.document_loaders import PyPDFLoader
-
+from app.database.repo_registory_db import db
+from app.tools.github_rag.ingestion.loader import load_repository
+from app.services.clone_repo import clone_repo
+from app.services.url import normalize_repo_url, generate_repo_hash, extract_repo_name
 from app.tools.github_rag.ingestion.splitter import split_documents
 from app.tools.github_rag.ingestion.embedder import create_vector_store
+from app.services.mongo_ops import add_repo_doc, update_doc
 
 
 # Base folder for uploaded PDFs
-PDF_STORAGE_FOLDER = Path("app/tools/pdf_rag/pdfs")
+GITHUB_REPO_FOLDER = Path("app/tools/github_rag/repos")
 
 
-@traceable(name="pdf_ingestion_pipeline")
-async def ingestion_pipeline(pdf_files: list[UploadFile],user_id: str,thread_id: str):
+@traceable(name="github_ingestion_pipeline")
+async def ingestion_pipeline(original_url: str,user_id: str,thread_id: str):
 
     try:
 
-        if not pdf_files:
-
-            raise HTTPException(
-                status_code=400,
-                detail="No PDF files uploaded."
-            )
-
-        # create pdf storage directory
-        PDF_STORAGE_FOLDER.mkdir(
+        # create repos directory
+        GITHUB_REPO_FOLDER.mkdir(
             parents=True,
             exist_ok=True
         )
 
-        all_docs = []
+        # normalize url
+        normalized_repo_url = normalize_repo_url(original_url)
 
-        for pdf_file in pdf_files:
+        # generate repo hash
+        repo_hash = generate_repo_hash(normalized_repo_url)
 
-            # validate pdf
-            if not pdf_file.filename.endswith(".pdf"):
+        # extract repo name
+        repo_name = extract_repo_name(normalized_repo_url)
 
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"{pdf_file.filename} is not a PDF file."
+        # local repo path
+        repo_path = (GITHUB_REPO_FOLDER / repo_name)
+
+        repo_collection = db["repositories"]
+
+        # check existing repo
+        repo = await repo_collection.find_one({
+            "repo_hash": repo_hash,
+            "user_id": user_id
+        })
+
+        # already ingested
+        if repo_path.exists() and repo:
+
+            return {
+                "success": True,
+                "message": "Repository already exists",
+                "repo_hash": repo_hash,
+                "repo_path": str(repo_path),
+            }
+
+        # clone repository
+        try:
+
+            await clone_repo(normalized_repo_url,repo_path,repo_hash)
+
+        except Exception as e:
+
+            print("repo clone failed error is:\n",str(e))
+            
+            raise Exception(
+                f"Repository cloning failed: {str(e)}"
+            )   
+
+        # save repository document
+        try:
+
+            await add_repo_doc(
+                original_url=original_url,
+                normalized_repo_url=normalized_repo_url,
+                repo_hash=repo_hash,
+                repo_name=repo_name,
+                repo_path=str(repo_path),
+                user_id=user_id,
+                thread_id=thread_id
+            )
+
+        except Exception as e:
+
+            # cleanup cloned repo
+            if repo_path.exists():
+
+                shutil.rmtree(repo_path)
+
+            raise Exception(
+                f"Repository document creation failed: {str(e)}"
+            )
+
+        # load repository files
+        try:
+
+            docs = load_repository(repo_path=repo_path,repo_hash=repo_hash,repo_name=repo_name,user_id=user_id,thread_id=thread_id)
+
+            if not docs:
+
+                raise Exception(
+                    "No valid files found in repository"
                 )
 
-            # final file path
-            file_path = PDF_STORAGE_FOLDER / pdf_file.filename
+        except Exception as e:
 
-            # save pdf locally
-            content = await pdf_file.read()
-
-            with open(file_path, "wb") as f:
-                f.write(content)
-
-            try:
-
-                # load pdf
-                loader = PyPDFLoader(str(file_path))
-
-                docs = loader.load()
-
-                # attach metadata
-                for doc in docs:
-
-                    doc.metadata["user_id"] = user_id
-
-                    doc.metadata["thread_id"] = thread_id
-
-                    doc.metadata["source_type"] = "pdf"
-
-                    doc.metadata["file_name"] = pdf_file.filename
-
-                    doc.metadata["file_path"] = str(file_path)
-
-                all_docs.extend(docs)
-
-            except Exception as e:
-
-                raise HTTPException(
-                    status_code=500,
-                    detail=f"PDF loading failed for {pdf_file.filename}: {str(e)}"
-                )
+           raise Exception(
+                f"Repository loading failed: {str(e)}"      
+            )
 
         # split documents
-        splitted_docs = split_documents(all_docs)
+        try:
 
-        # create embeddings + vector store
-        create_vector_store(splitted_docs)
+            splitted_docs = split_documents(docs)
+
+        except Exception as e:
+
+            raise Exception(
+                f"Document splitting failed: {str(e)}"      
+            )     
+
+        # create vector store
+        try:
+
+            create_vector_store(splitted_docs)
+
+        except Exception as e:
+
+            raise Exception(
+                f"Vector store creation failed: {str(e)}"
+            )
+
+        # update repository status
+        try:
+
+            await update_doc(repo_hash=repo_hash,user_id=user_id)
+
+        except Exception as e:
+
+           raise Exception(
+                f"Repository status update failed: {str(e)}"
+            )
 
         return {
             "success": True,
-            "message": "PDF ingestion successful.",
-            "total_documents": len(all_docs),
-            "total_chunks": len(splitted_docs)
+            "message": "Repository ingestion successful",
+            "repo_hash": repo_hash,
+            "repo_path": str(repo_path),
         }
-
-    except HTTPException:
-        raise
 
     except Exception as e:
 
-        raise HTTPException(
-            status_code=500,
-            detail=f"Unexpected server error in PDF ingestion pipeline: {str(e)}"
+       raise Exception(
+            f"Ingestion pipeline failed: {str(e)}"
         )

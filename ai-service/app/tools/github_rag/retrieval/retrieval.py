@@ -16,9 +16,6 @@ def retrieval_pipeline(query:str,url:str,user_id:str,thread_id:str):
     compressor = get_compression_retriever(base)
 
     docs = compressor.invoke(query)
-
-    # print(f"user's query:\n{query}")
-    print(f"retrieved documents metadata:\n{docs[0].metadata}")
         
 
     return generate_answer(query=query,docs=docs)
