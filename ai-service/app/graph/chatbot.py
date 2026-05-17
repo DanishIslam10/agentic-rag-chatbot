@@ -19,9 +19,13 @@ DB_URI = os.getenv("DB_URI")
 
 class ChatState(BaseModel):
     messages : Annotated[List[BaseMessage],add_messages]
-    pdf_paths: Optional[list[str]] = Field(...,description="One or more pdf file paths which could be required by PDF RAG tool.")
 
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(
+    model="gpt-4o-mini",
+    streaming=True,
+    temperature=0.7 
+) 
+
 
 tools = [search_tool,github_rag_tool]
 

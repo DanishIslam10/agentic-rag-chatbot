@@ -1,3 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+}
+
+html, body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 table {
     margin: 20px 0px 20px 0px;
   border-collapse: collapse;
@@ -8,9 +23,12 @@ th {
     border: 1px solid #f9f9f9;
     padding: 20px;
     text-align: left;
+    font-weight: 400;
 }
 td {
   border: 1px solid #f9f9f9;
   padding: 8px;
   text-align: left;
+  font-weight: 300;
 }
+

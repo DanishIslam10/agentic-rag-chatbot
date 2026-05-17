@@ -18,7 +18,7 @@ export default function SignUp() {
   e.preventDefault();
 
   try {
-    console.log("Form Submitted:", formData);
+    // console.log("Form Submitted:", formData);
 
     const SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
 
@@ -28,7 +28,7 @@ export default function SignUp() {
       withCredentials: true,
     });
 
-    console.log("Server Response:", response);
+    // console.log("Server Response:", response);
 
     if (response.status === 201) {
       toast.success("Account created successfully!");
@@ -36,7 +36,7 @@ export default function SignUp() {
   }
   catch (error) {
 
-    console.log(error);
+    // console.log(error);
 
     // backend custom error message
     const message =

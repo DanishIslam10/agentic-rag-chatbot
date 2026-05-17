@@ -5,47 +5,75 @@ import { createMessageService,getChatSessionHistoryService } from "../services/m
 
 export const sendMessage = async (req, res) => {
 
-    const humanMessage = req.body; 
-
-    if (!humanMessage.content || !humanMessage.chat || !humanMessage.sessionId || humanMessage.role !== "human") {
-        return res.status(400).json({
-            success: false,
-            message: "Invalid message format. 'content', 'chat', 'sessionId' and 'role' (should be 'human') are required."
-        })
-    }
+    const humanMessage = req.body;
 
     try {
-       
-        const aiChatbotResponse = await chatbotService(humanMessage);
 
-        // console.log("ai chatbot res: \n",aiChatbotResponse)
-        
-        // this "data" object contains entire ai response
-        const latestAiMessage = aiChatbotResponse.response
-        // console.log("latest ai message: \n",latestAiMessage)
+        const aiResponse =
+            await chatbotService(humanMessage);
 
-        // extracting latest response message of ai chatbot to save it in db
-        const aiMessage = {
-            chat: humanMessage.chat,
-            sessionId: humanMessage.sessionId,
-            content: latestAiMessage,
-            role: "ai"
+        if (!aiResponse.body) {
+            throw new Error(
+                "No response body from AI service"
+            );
         }
 
-        return res.status(201).json({
-            success: true,
-            message:aiMessage
-        })
+        res.setHeader(
+            "Content-Type",
+            "text/plain"
+        );
+
+        res.setHeader(
+            "Transfer-Encoding",
+            "chunked"
+        );
+
+        const reader =
+            aiResponse.body.getReader();
+
+        const decoder = new TextDecoder();
+
+        while (true) {
+
+            const { done, value } =
+                await reader.read();
+
+            if (done) break;
+
+            const chunk =
+                decoder.decode(value, {
+                    stream: true
+                });
+
+            res.write(chunk);
+        }
+
+        res.end();
 
     } catch (error) {
-        return res.status(
-            error.statusCode || 500
-        ).json({
-            success: false,
-            message: error.message
-        })
+
+        console.error(
+            "Streaming error:",
+            error
+        );
+
+        // IMPORTANT:
+        // don't send json after stream starts
+
+        if (!res.headersSent) {
+
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+
+        // if streaming already started
+        // just terminate safely
+
+        res.end();
     }
-}
+};
 
 export const getChatSessionHistory = async (req, res) => {
 
@@ -79,7 +107,7 @@ export const saveMessageDoc = async (req, res) => {
 
     const data = req.body;
 
-    console.log("Data received in saveMessageDoc controller:", data);
+    // console.log("Data received in saveMessageDoc controller:", data);
 
     try {
         const messageDoc = await createMessageService(data);

@@ -8,7 +8,7 @@ const authMiddleware = async (req, res, next) => {
 
     const token = req.cookies.token;
 
-    console.log("Token from cookies:", token);
+    // console.log("Token from cookies:", token);
 
     // Check if token exists
 
@@ -27,7 +27,7 @@ const authMiddleware = async (req, res, next) => {
       process.env.JWT_SECRET
     );
 
-    console.log("decoded user: ",decoded)
+    // console.log("decoded user: ",decoded)
 
     // Attach user data to request object
 

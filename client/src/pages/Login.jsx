@@ -35,7 +35,7 @@ export default function Login() {
       }
     );
 
-    console.log("Login Response:", response.data);
+    // console.log("Login Response:", response.data);
 
     if (response.data.success) {
       // Handle successful login (e.g., redirect to dashboard)

@@ -1,10 +1,12 @@
-from fastapi import FastAPI
 from dotenv import load_dotenv
-from app.routes import chat,github_rag
+load_dotenv()
+
+
+from app.routes import chat
 from app.graph.chatbot import build_graph
 from contextlib import asynccontextmanager
+from fastapi import FastAPI
 
-load_dotenv()
     
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -29,7 +31,6 @@ app = FastAPI(
 )
 
 app.include_router(chat.router)
-app.include_router(github_rag.router)
 
 @app.get("/")
 async def root():

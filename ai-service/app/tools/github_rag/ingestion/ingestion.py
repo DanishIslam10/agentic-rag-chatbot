@@ -63,7 +63,7 @@ async def ingestion_pipeline(original_url: str,user_id: str,thread_id: str):
 
         except Exception as e:
 
-            print("repo clone failed error is:\n",str(e))
+            # print("repo clone failed error is:\n",str(e))
             
             raise Exception(
                 f"Repository cloning failed: {str(e)}"

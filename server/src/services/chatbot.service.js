@@ -3,31 +3,47 @@ import axios from "axios"
 export const chatbotService = async (data) => {
 
     const payload = {
-        "message":data.content,
-        "thread_id":data.sessionId,
-        "user_id":String(data.user_id)
-    }
+        message: data.content,
+        thread_id: data.sessionId,
+        user_id: String(data.user_id)
+    };
 
-    // console.log("chatbot service payload:\n", payload)
+    if (
+        !payload.message ||
+        !payload.thread_id ||
+        !payload.user_id
+    ) {
+        const error = new Error(
+            "message info for ai-chatbot-service is incomplete."
+        );
 
-    if (!payload.message || !payload.thread_id || !payload.user_id) {
-       const error = new Error("message info for ai-chatbot-service is incomplete.")
-       error.statusCode = 400;
-       throw error;
+        error.statusCode = 400;
+
+        throw error;
     }
 
     try {
 
-        const response = await axios.post(`${process.env.AI_SERVICE_URL}/chat-message`,payload);
+        const response = await fetch(
+            `${process.env.AI_SERVICE_URL}/chat-message`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            }
+        );
 
-        // console.log("chatbot service response:\n",response.data)
-        return response.data
+        return response;
 
     } catch (error) {
-        console.error("chatbot service error:\n",error);
-        return {
-            success:false,
-            message:error.message
-        }
+
+        console.error(
+            "chatbot service error:\n",
+            error
+        );
+
+        throw error;
     }
-} 
+};

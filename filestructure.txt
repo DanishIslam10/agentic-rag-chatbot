@@ -105,8 +105,10 @@
             |-- react.svg
             |-- vite.svg
         |-- components
+            |-- ActiveChatTitle.jsx
             |-- ChatWindow.jsx
             |-- DisplayMessages.jsx
+            |-- EmptyChatWindow.jsx
             |-- Icon.jsx
             |-- LogoutModal.jsx
             |-- MessageSender.jsx
@@ -138,7 +140,6 @@
             |-- auth.controller.js
             |-- chat.controller.js
             |-- message.controller.js
-            |-- restoreAuth.controller.js
         |-- index.js
         |-- middlewares
             |-- auth.middleware.js

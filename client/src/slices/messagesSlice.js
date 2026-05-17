@@ -4,6 +4,7 @@ const initialState = {
   activeChatId: null,
   activeSessionId: null,
   messages: [],
+  streamingMessageId: null,
 };
 
 const messagesSlice = createSlice({
@@ -27,12 +28,40 @@ const messagesSlice = createSlice({
       state.messages.push(action.payload);
     },
 
+    updateMessage: (state, action) => {
+
+      const { _id, content } = action.payload;
+
+      const message = state.messages.find(
+        (msg) => msg._id === _id
+      );
+
+      if (message) {
+        message.content = content;
+      }
+    },
+
+    replaceMessage: (state, action) => {
+
+      const { _id, newMessage } = action.payload;
+      const index = state.messages.findIndex(
+        (msg) => msg._id === _id
+      );
+      if (index !== -1) {
+        state.messages[index] = newMessage;
+      }
+    },
+
     clearMessages: (state) => {
       state.messages = [];
     },
+
+    setStreamingMessageId: (state, action) => {
+      state.streamingMessageId = action.payload;
+    } 
   },
 });
 
-export const { addMessage, addMessages, clearMessages, setActiveChatId, setActiveSessionId } = messagesSlice.actions;
+export const { addMessage, addMessages, clearMessages, setActiveChatId, setActiveSessionId, updateMessage, replaceMessage, setStreamingMessageId } = messagesSlice.actions;
 
 export default messagesSlice.reducer;

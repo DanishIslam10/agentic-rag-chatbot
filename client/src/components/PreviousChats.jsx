@@ -20,7 +20,7 @@ export default function PreviousChats() {
             withCredentials: true,
         });
 
-        console.log("Previous Chats:", response.data.chats);
+        // console.log("Previous Chats:", response.data.chats);
 
         const prevChats = response.data.chats;
 
@@ -35,13 +35,13 @@ export default function PreviousChats() {
     }, [])
 
     useEffect(() => {
-        console.log("Previous Chats in Redux Store:", previousChats);
+        // console.log("Previous Chats in Redux Store:", previousChats);
     }, [previousChats])
 
     async function handleChatClick(chat) {
         // Logic to handle click on a previous chat item
         // For example, you can navigate to the chat page with the selected chat's sessionId
-        console.log("Clicked on chat:", chat);
+        // // console.log("Clicked on chat:", chat);
 
         try {
 
@@ -54,7 +54,7 @@ export default function PreviousChats() {
 
             const chatSessionHistory = response.data.messages;
 
-            console.log("Chat History for selected chat:", chatSessionHistory);
+            // // console.log("Chat History for selected chat:", chatSessionHistory);
 
             dispatch(clearMessages());
             dispatch(addMessages(chatSessionHistory));
@@ -68,9 +68,9 @@ export default function PreviousChats() {
     }
 
     useEffect(() => {
-        console.log("Messages in Redux Store:", messages);
-        console.log("Active Chat ID:", activeChatId);
-        console.log("Active Session ID:", activeSessionId);
+        // console.log("Messages in Redux Store:", messages);
+        // console.log("Active Chat ID:", activeChatId);
+        // console.log("Active Session ID:", activeSessionId);
     }, [messages, activeChatId, activeSessionId])
 
     const openDeleteConfirm = (chat, event) => {
@@ -98,12 +98,10 @@ export default function PreviousChats() {
         setSelectedDeleteChat(null);
         setIsConfirmOpen(false);
 
-        const response = await axios.delete(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/delete-chat`, {
+        await axios.delete(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/delete-chat`, {
             data: { chatId: selectedDeleteChat._id },
             withCredentials: true,
         });
-
-        console.log("Delete Chat Response:", response.data);
 
     };
 
@@ -128,7 +126,7 @@ export default function PreviousChats() {
                                 <button
                                     type="button"
                                     onClick={(event) => openDeleteConfirm(chat, event)}
-                                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-200 transition hover:bg-white/20 hover:text-white"
+                                    className="inline-flex h-9 w-9 items-center justify-center cursor-pointer rounded-full bg-white/10 text-slate-200 transition hover:bg-white/20 hover:text-white"
                                     aria-label={`Delete chat ${chat.title}`}
                                 >
                                     <Trash2 size={16} />

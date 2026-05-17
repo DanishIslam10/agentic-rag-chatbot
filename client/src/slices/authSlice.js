@@ -5,7 +5,7 @@ const initialState = {
   isLoggedIn: false,
 };
 
-console.log("Initial auth state:", initialState);
+// console.log("Initial auth state:", initialState);
 
 const authSlice = createSlice({
   name: "auth",

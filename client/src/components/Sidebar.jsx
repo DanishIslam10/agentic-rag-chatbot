@@ -29,7 +29,7 @@ export default function Sidebar() {
                 withCredentials: true,
             });
 
-            console.log("Logged out cleanly.");
+            // console.log("Logged o  ut cleanly.");
             setIsModalOpen(false);
             dispatch(logout());
             navigate('/');

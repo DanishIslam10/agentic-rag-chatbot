@@ -1,18 +1,17 @@
 from fastapi import APIRouter,UploadFile,File,Form
-from app.graph.chatbot import build_graph
+from fastapi import Request
 from langchain_core.messages import HumanMessage
 from app.schema.message_schema import MessageSchema
 from app.schema.title_schema import TitleSchema
 from app.services.chat_title import chat_title_chain
-from fastapi import Request
 from typing import List
-
+from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 
 
 @router.post("/api/ai-service/chat-message")
-async def chat(data:MessageSchema):
+async def chat(request: Request, data:MessageSchema):
     
     thread_id = data.thread_id
     message = data.message
@@ -25,40 +24,32 @@ async def chat(data:MessageSchema):
         }
     }
 
-    pdf_paths = []
+    chatbot_workflow = request.app.state.chatbot_workflow
+    
+    async def generate():
 
-    # # save uploaded pdfs if present
-    # if files:
+        async for event in chatbot_workflow.astream_events(
+            {
+                "messages": [
+                    HumanMessage(content=message)
+                ],
+            },
+            config=config,
+            version="v2"
+        ):
 
-    #     for file in files:
+             if event["event"] == "on_chat_model_stream":
 
-    #         file_path = f"app/tools/pdf_rag/uploads/{file.filename}"
+                chunk = event["data"]["chunk"]
 
-    #         content = await file.read()
-
-    #         with open(file_path, "wb") as f:
-    #             f.write(content)
-
-    #         pdf_paths.append(file_path)
-
-    chatbot_workflow, checkpointer_cm = await build_graph()
-
-    result = await chatbot_workflow.ainvoke(
-        {
-            "messages": [
-                HumanMessage(content=message)
-            ],
-
-            "pdf_paths": pdf_paths
-        },
-        config=config
+                if chunk.content:
+                    yield chunk.content
+            
+    return StreamingResponse(
+        generate(),
+        media_type="text/plain"
     )
 
-    ai_message = result["messages"][-1].content
-
-    return {
-        "response": ai_message
-    }
     
 @router.post("/api/ai-service/generate-title")
 async def generate_title(data:TitleSchema):

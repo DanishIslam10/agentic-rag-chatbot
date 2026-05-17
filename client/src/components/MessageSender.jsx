@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { addMessage } from "../slices/messagesSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { setActiveChatId, setActiveSessionId } from "../slices/messagesSlice";
+import { setActiveChatId, setActiveSessionId, addMessage, updateMessage, replaceMessage, setStreamingMessageId } from "../slices/messagesSlice";
 import { addPreviousChat } from "../slices/previousChatsSlice";
+import { SendHorizontal } from 'lucide-react';
 
 export default function MessageSender() {
 
@@ -39,7 +39,7 @@ export default function MessageSender() {
             humanMessage.sessionId = newChat.sessionId;
         }
 
-        console.log("Human Message to be sent:", humanMessage);
+        // console.log("Human Message to be sent:", humanMessage);
 
         // saving human meessage to mongodb only 
         const response = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/save-message-doc`, humanMessage, {
@@ -49,47 +49,116 @@ export default function MessageSender() {
         // the saved human message document returned from the server, which is then added to the redux store
         const humanMessageDoc = response?.data?.message;
 
-        console.log("Message Send response:", humanMessageDoc);
+        ("Message Send response:", humanMessageDoc);
 
         setMessage("");
         dispatch(addMessage(humanMessageDoc));
 
-        console.log("Human message saved to DB and added to store, now sending to chatbot for AI response...", humanMessage);
-        const aiResponse = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/message`, humanMessage, {
-            withCredentials: true,
-        });
+        const tempAiMessage = {
+            _id: Math.random().toString(36).substring(2, 15), // generate a random id for the temp AI message
+            chat: humanMessage.chat,
+            sessionId: humanMessage.sessionId,
+            role: "ai",
+            content: ""
+        };
 
-        const aiMessage = aiResponse?.data?.message;
+        dispatch(setStreamingMessageId(tempAiMessage._id))
 
-        const aiMessageResponse = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/save-message-doc`, aiMessage, {
-            withCredentials: true,
-        });
+        // console.log("Temp AI Message created and added to store, now sending human message to chatbot for AI response...", tempAiMessage);
 
-        const aiMessageDoc = aiMessageResponse?.data?.message;
+        dispatch(addMessage(tempAiMessage));
 
-        console.log("Message Send aiResponse:", aiResponse.data);
+        // console.log("Human message saved to DB and added to store, now sending to chatbot for AI response...", humanMessage);
 
-        dispatch(addMessage(aiMessageDoc)
+        try {
 
-        );
 
+            const aiResponse = await fetch(
+                `${import.meta.env.VITE_SERVER_ENDPOINT}/chat/message`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(humanMessage),
+                }
+            );
+
+            const reader = aiResponse.body.getReader();
+
+            const decoder = new TextDecoder();
+
+            let aiText = "";
+
+            while (true) {
+
+                const { done, value } = await reader.read();
+
+                if (done) break;
+
+
+                const chunk = decoder.decode(value);
+
+                // console.log("Received chunk from chatbot:", chunk);
+
+                aiText += chunk;
+
+                dispatch(updateMessage({
+                    _id: tempAiMessage._id,
+                    content: aiText
+                }));
+            }
+
+            //  console.log("Full AI response received from chatbot:", aiText);
+
+            const aiMessageObj = {
+                chat: humanMessage.chat,
+                sessionId: humanMessage.sessionId,
+                role: "ai",
+                content: aiText
+            }
+
+            const aiMessageResponse = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/save-message-doc`, aiMessageObj, {
+                withCredentials: true,
+            });
+
+            dispatch(replaceMessage({
+                _id: tempAiMessage._id,
+                newMessage: aiMessageResponse.data.message
+            }));
+
+            dispatch(setStreamingMessageId(null));
+
+        } catch (error) {
+            console.error("Error in sending message to chatbot or receiving response:", error);
+            dispatch(updateMessage({
+                _id: tempAiMessage._id,
+                content: "Error in getting response from AI. Please try again."
+            }));
+            dispatch(setStreamingMessageId(null));
+        }
+
+        // console.log("Message Send aiResponse:", aiMessageResponse.data.message);
     };
 
 
     return (
-        <div className="flex items-center gap-4">
+        <div className="relative flex items-center rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 shadow-inner backdrop-blur-xl transition-all duration-300 focus-within:border-cyan-400/40 focus-within:shadow-cyan-500/10">
+
             <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 rounded-full border border-teal-500/30 bg-slate-50 py-3 px-4 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-teal-400 focus:bg-white focus:ring-2 focus:ring-teal-400/20"
+                type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Message Aurora..."
+                className=" flex-1 bg-transparent pr-14 text-sm text-white  placeholder:text-slate-50 outline-none"
             />
-            <button
-                onClick={sendMessageHandler}
-                className="rounded-full bg-linear-to-r from-[#00d2ff] to-[#00f5d4] p-3 text-sm font-extrabold tracking-wide text-slate-900 shadow-[0_0_20px_rgba(0,245,212,0.35)] transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(0,245,212,0.55)] hover:brightness-105 active:scale-[0.98]">
-                Send
+
+            <button onClick={sendMessageHandler} className=" group absolute right-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-r  from-cyan-400  via-teal-300  to-emerald-300  text-slate-900 shadow-lg  shadow-cyan-500/20  transition-all duration-300  hover:-translate-y-0.5  hover:shadow-cyan-400/40  active:scale-95">
+
+                <span className=" absolute inset-0 rounded-2xl  bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 " />
+
+                <SendHorizontal size={18} className="relative z-10" />
+
             </button>
+
         </div>
     );
 }

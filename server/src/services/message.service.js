@@ -44,7 +44,7 @@ export const getChatSessionHistoryService = async (chatId) => {
 
   const messages = await Message.find({ chat: chatId }).sort({ createdAt: 1 });
 
-  console.log("Chat session history messages:\n", messages);
+//   console.log("Chat session history messages:\n", messages);
 
   return messages;
 

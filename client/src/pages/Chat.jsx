@@ -7,7 +7,7 @@ export default function ChatPage() {
       <div className="w-[25vw]">
         <Sidebar />
       </div>
-      <div className="w-[75vw]">
+      <div className="w-[75vw] h-screen">
         <ChatWindow />
       </div>
     </div>

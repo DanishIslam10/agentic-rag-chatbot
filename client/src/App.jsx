@@ -25,7 +25,7 @@ function App() {
         withCredentials: true,
       });
 
-      console.log("Restore Auth State Response:", response.data);
+      // console.log("Restore Auth State Response:", response.data);
 
       if (response.data.success) {
         // Update auth state in Redux store
@@ -44,10 +44,10 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("User is already logged in:", user);
+      // console.log("User is already logged in:", user);
       navigate('/chat');
     } else {
-      console.log("User is not logged in. Attempting to restore auth state...");
+      // console.log("User is not logged in. Attempting to restore auth state...");
       getAuthState();
     }
   }, [])
