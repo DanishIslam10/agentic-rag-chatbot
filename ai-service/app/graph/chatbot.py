@@ -21,7 +21,7 @@ class ChatState(BaseModel):
     messages : Annotated[List[BaseMessage],add_messages]
     pdf_paths: Optional[list[str]] = Field(...,description="One or more pdf file paths which could be required by PDF RAG tool.")
 
-llm = ChatOpenAI(model="gpt-5-mini")
+llm = ChatOpenAI(model="gpt-4o-mini")
 
 tools = [search_tool,github_rag_tool]
 

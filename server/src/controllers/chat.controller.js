@@ -78,13 +78,14 @@ export const deleteChat = async (req, res) => {
     }
 
     try {
-        await deleteChatService(chatId, req.user.id);
+        await deleteChatService(req.user.id,chatId);
         return res.status(200).json({   
             success: true,
             message: "Chat deleted successfully"
         })
 
     } catch (error) {
+        console.error("Error deleting chat:", error);
         return res.status(
             error.statusCode || 500
         ).json({

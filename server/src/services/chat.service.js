@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import Chat from "../models/Chat.js";
 import User from "../models/User.js"
+import Message from "../models/Message.js";
 import mongoose from "mongoose";
 
 export const createChatService = async (id,title) => {
@@ -66,6 +67,9 @@ export const deleteChatService = async (userId, chatId) => {
 
   // Delete the chat document from the Chat collection
   await Chat.findOneAndDelete({ _id: chatId, user: userId });
+
+  // Delete all messages associated with the chat
+  await Message.deleteMany({ chat: chatId });
 
   // Remove the chat reference from the user's chat list
   await User.findByIdAndUpdate(

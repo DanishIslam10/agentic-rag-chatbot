@@ -1,4 +1,5 @@
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function DisplayMessage({ message }) {
 
@@ -16,8 +17,8 @@ export default function DisplayMessage({ message }) {
                     </span>
                 )
             }
-            <div className={`max-w-[50vw] px-4 py-2 my-4 rounded-lg ${message?.role === "human" ? "bg-[#1249B0] text-white" : "bg-[#17ADA1] text-"}`}>
-                <ReactMarkdown>{message?.content}</ReactMarkdown>
+            <div className={`max-w-[50vw] px-4 py-2 my-4 rounded-lg ${message?.role === "human" ? "bg-[#1249B0] text-white" : "bg-[#17ADA1] text-white"}`}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} >{message?.content}</ReactMarkdown>
             </div>
         </div>
     );

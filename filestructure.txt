@@ -62,27 +62,6 @@
                         |-- loader.cpython-314.pyc
                         |-- splitter.cpython-314.pyc
                 |-- repos
-                    |-- airbnb-etl-with-qdrant
-                        |-- .gitignore
-                        |-- cleaning.py
-                        |-- raw_data
-                            |-- columns info.docx
-                            |-- ~$lumns info.docx
-                        |-- README.md
-                        |-- save_embeddings.py
-                        |-- semantic_search.py
-                        |-- tempCodeRunnerFile.python
-                        |-- Untitled.ipynb
-                    |-- mini-etl
-                        |-- .gitignore
-                        |-- etl_titanic.py
-                        |-- processed_data
-                            |-- titanic.db
-                        |-- raw_data
-                            |-- Titanic_Dataset.csv
-                        |-- README.md
-                        |-- save_embeddings.py
-                        |-- Untitled.ipynb
                 |-- retrieval
                     |-- generation.py
                     |-- retrieval.py
@@ -97,13 +76,6 @@
                         |-- generation.cpython-314.pyc
                         |-- retrieval.cpython-314.pyc
                 |-- vectorstore
-                    |-- chroma_db
-                        |-- 96ab2e4c-15a0-483b-b17a-3d6ae2f6722c
-                            |-- data_level0.bin
-                            |-- header.bin
-                            |-- length.bin
-                            |-- link_lists.bin
-                        |-- chroma.sqlite3
                 |-- __pycache__
                     |-- github_rag_pipeline.cpython-314.pyc
             |-- pdf_rag
@@ -135,7 +107,6 @@
         |-- components
             |-- ChatWindow.jsx
             |-- DisplayMessages.jsx
-            |-- FormattedMessage.jsx
             |-- Icon.jsx
             |-- LogoutModal.jsx
             |-- MessageSender.jsx

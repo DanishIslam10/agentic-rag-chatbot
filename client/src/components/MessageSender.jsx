@@ -18,6 +18,7 @@ export default function MessageSender() {
 
         if (message.trim() === "") return;
 
+        //build humanMessage object to be sent to the server
         let humanMessage = {
             chat: activeChatId,
             sessionId: activeSessionId,
@@ -41,22 +42,36 @@ export default function MessageSender() {
         console.log("Human Message to be sent:", humanMessage);
 
         // saving human meessage to mongodb only 
-        const humanResponse = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/save-message-doc`, humanMessage, {
+        const response = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/save-message-doc`, humanMessage, {
             withCredentials: true,
         });
-        console.log("Message Send humanResponse:", humanResponse.data);
+
+        // the saved human message document returned from the server, which is then added to the redux store
+        const humanMessageDoc = response?.data?.message;
+
+        console.log("Message Send response:", humanMessageDoc);
 
         setMessage("");
-        dispatch(addMessage(humanResponse.data.message));
+        dispatch(addMessage(humanMessageDoc));
 
-        // saving ai message to mongodb and getting ai response from openai api in the same endpoint
-        const aiResponse = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/message`, { ...humanMessage }, {
+        console.log("Human message saved to DB and added to store, now sending to chatbot for AI response...", humanMessage);
+        const aiResponse = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/message`, humanMessage, {
             withCredentials: true,
         });
+
+        const aiMessage = aiResponse?.data?.message;
+
+        const aiMessageResponse = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/save-message-doc`, aiMessage, {
+            withCredentials: true,
+        });
+
+        const aiMessageDoc = aiMessageResponse?.data?.message;
 
         console.log("Message Send aiResponse:", aiResponse.data);
 
-        dispatch(addMessage(aiResponse.data.message));
+        dispatch(addMessage(aiMessageDoc)
+
+        );
 
     };
 

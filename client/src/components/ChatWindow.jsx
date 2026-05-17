@@ -6,6 +6,8 @@ export default function ChatWindow() {
 
     const { messages } = useSelector((state) => state.messages);
 
+    console.log("ChatWindow messages:", messages);
+
     return (
         <div className="flex flex-col p-6 h-screen bg-[#DDFAF4]">
             <style>{`

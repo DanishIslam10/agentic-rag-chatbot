@@ -58,7 +58,7 @@ export default function PreviousChats() {
 
             dispatch(clearMessages());
             dispatch(addMessages(chatSessionHistory));
-            dispatch(setActiveChatId(chat.chatId));
+            dispatch(setActiveChatId(chat._id));
             dispatch(setActiveSessionId(chat.sessionId));
 
         } catch (error) {

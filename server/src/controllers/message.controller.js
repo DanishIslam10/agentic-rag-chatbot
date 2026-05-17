@@ -4,38 +4,18 @@ import { getChatTitleService } from "../services/chatTitle.service.js";
 import { createMessageService,getChatSessionHistoryService } from "../services/message.service.js";
 
 export const sendMessage = async (req, res) => {
-    const { sessionId, chat, content, role } = req.body; // 'content' and 'role' is also provided by the client
-    const { id } = req.user  //this "id" is user's mongo document id.
 
-    if (!content) {
+    const humanMessage = req.body; 
+
+    if (!humanMessage.content || !humanMessage.chat || !humanMessage.sessionId || humanMessage.role !== "human") {
         return res.status(400).json({
             success: false,
-            message: "Message content is required"
+            message: "Invalid message format. 'content', 'chat', 'sessionId' and 'role' (should be 'human') are required."
         })
     }
 
     try {
-        let humanMessage = {
-            ...req.body,
-            user_id: id,
-            role: role || "human"
-        };
-        //if this is the first message by the user then sessionId and chat (id of chat document) will not be present
-        if (!sessionId || !chat) {
-
-            const chatTitle = await getChatTitleService(content);
-
-            const newChatSession = await createChatService(id,chatTitle);
-            humanMessage = {
-                ...req.body,
-                user_id: id,
-                role: role || "human",
-                sessionId: newChatSession.chat.sessionId,
-                chat: newChatSession.chat._id
-            }
-        }
-        // console.log("human message:\n", humanMessage)
-
+       
         const aiChatbotResponse = await chatbotService(humanMessage);
 
         // console.log("ai chatbot res: \n",aiChatbotResponse)
@@ -46,23 +26,15 @@ export const sendMessage = async (req, res) => {
 
         // extracting latest response message of ai chatbot to save it in db
         const aiMessage = {
-            chat: chat || humanMessage.chat,
-            sessionId: sessionId || humanMessage.sessionId,
+            chat: humanMessage.chat,
+            sessionId: humanMessage.sessionId,
             content: latestAiMessage,
             role: "ai"
         }
 
-        // console.log("ai message",aiMessage);
-        
-        //save human message in db
-        await createMessageService(humanMessage);
-        
-        //svae ai message in db
-        const aiMessageDoc = await createMessageService(aiMessage);
-
         return res.status(201).json({
             success: true,
-            message:aiMessageDoc
+            message:aiMessage
         })
 
     } catch (error) {
