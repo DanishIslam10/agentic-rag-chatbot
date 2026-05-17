@@ -62,6 +62,17 @@
                         |-- loader.cpython-314.pyc
                         |-- splitter.cpython-314.pyc
                 |-- repos
+                    |-- airbnb-etl-with-qdrant
+                        |-- .gitignore
+                        |-- cleaning.py
+                        |-- raw_data
+                            |-- columns info.docx
+                            |-- ~$lumns info.docx
+                        |-- README.md
+                        |-- save_embeddings.py
+                        |-- semantic_search.py
+                        |-- tempCodeRunnerFile.python
+                        |-- Untitled.ipynb
                     |-- mini-etl
                         |-- .gitignore
                         |-- etl_titanic.py
@@ -104,6 +115,7 @@
             |-- main.cpython-314.pyc
     |-- requirements.txt
 |-- client
+    |-- .env
     |-- .gitignore
     |-- eslint.config.js
     |-- index.html
@@ -120,8 +132,29 @@
             |-- hero.png
             |-- react.svg
             |-- vite.svg
+        |-- components
+            |-- ChatWindow.jsx
+            |-- DisplayMessages.jsx
+            |-- FormattedMessage.jsx
+            |-- Icon.jsx
+            |-- LogoutModal.jsx
+            |-- MessageSender.jsx
+            |-- NewChatBtn.jsx
+            |-- PreviousChats.jsx
+            |-- ProtectedRoute.jsx
+            |-- Sidebar.jsx
         |-- index.css
         |-- main.jsx
+        |-- pages
+            |-- Chat.jsx
+            |-- Login.jsx
+            |-- SignUp.jsx
+        |-- slices
+            |-- authSlice.js
+            |-- messagesSlice.js
+            |-- previousChatsSlice.js
+        |-- store
+            |-- store.js
     |-- vite.config.js
 |-- server
     |-- .env
@@ -134,6 +167,7 @@
             |-- auth.controller.js
             |-- chat.controller.js
             |-- message.controller.js
+            |-- restoreAuth.controller.js
         |-- index.js
         |-- middlewares
             |-- auth.middleware.js

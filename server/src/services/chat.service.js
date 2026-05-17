@@ -30,9 +30,50 @@ export const createChatService = async (id,title) => {
     { new: true }
   )
 
-  return {
-    success: true,
-    chat
-  }
+  return chat;
 
 };
+
+
+export const getPreviousChatsService = async (id) => {
+
+  if (!id) {
+    const error = new Error("User id is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const chats = await Chat.find({ user: id }).sort({ createdAt: -1 });
+
+  return chats;
+
+};
+
+
+export const deleteChatService = async (userId, chatId) => {
+
+  if (!userId) {  
+    const error = new Error("User id is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!chatId) {
+    const error = new Error("Chat id is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // Delete the chat document from the Chat collection
+  await Chat.findOneAndDelete({ _id: chatId, user: userId });
+
+  // Remove the chat reference from the user's chat list
+  await User.findByIdAndUpdate(
+    userId,
+    { $pull: { chats: chatId } },
+    { new: true }
+  );
+
+  return;
+
+}

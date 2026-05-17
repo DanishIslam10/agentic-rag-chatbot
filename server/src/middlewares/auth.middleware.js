@@ -8,6 +8,8 @@ const authMiddleware = async (req, res, next) => {
 
     const token = req.cookies.token;
 
+    console.log("Token from cookies:", token);
+
     // Check if token exists
 
     if (!token) {
@@ -16,7 +18,6 @@ const authMiddleware = async (req, res, next) => {
         success: false,
         message: "Unauthorized access",
       });
-
     }
 
     // Verify token

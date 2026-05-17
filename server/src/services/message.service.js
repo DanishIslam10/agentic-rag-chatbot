@@ -6,7 +6,7 @@ export const createMessageService = async (data) => {
 
     const { chat,sessionId, content, role } = data;
 
-    console.log("message service data:\n", data)
+    // console.log("message service data:\n", data)
 
     if (!chat || !sessionId || !content || !role) {
         const error = new Error("Message Information is incomplete");
@@ -29,9 +29,23 @@ export const createMessageService = async (data) => {
         { new: true }
     )
 
-    return {
-        success: true,
-        message,
-    }
+    return message;
 
 }
+
+
+export const getChatSessionHistoryService = async (chatId) => {
+
+  if (!chatId) {
+    const error = new Error("Chat id is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const messages = await Message.find({ chat: chatId }).sort({ createdAt: 1 });
+
+  console.log("Chat session history messages:\n", messages);
+
+  return messages;
+
+};
