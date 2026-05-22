@@ -1,5 +1,6 @@
 |-- .gitignore
 |-- ai-service
+    |-- .dockerignore
     |-- .env
     |-- .ipynb_checkpoints
     |-- app
@@ -62,6 +63,17 @@
                         |-- loader.cpython-314.pyc
                         |-- splitter.cpython-314.pyc
                 |-- repos
+                    |-- airbnb-etl-with-qdrant
+                        |-- .gitignore
+                        |-- cleaning.py
+                        |-- raw_data
+                            |-- columns info.docx
+                            |-- ~$lumns info.docx
+                        |-- README.md
+                        |-- save_embeddings.py
+                        |-- semantic_search.py
+                        |-- tempCodeRunnerFile.python
+                        |-- Untitled.ipynb
                 |-- retrieval
                     |-- generation.py
                     |-- retrieval.py
@@ -76,6 +88,13 @@
                         |-- generation.cpython-314.pyc
                         |-- retrieval.cpython-314.pyc
                 |-- vectorstore
+                    |-- chroma_db
+                        |-- 126f5e35-6723-4c5c-8570-d277e13f1110
+                            |-- data_level0.bin
+                            |-- header.bin
+                            |-- length.bin
+                            |-- link_lists.bin
+                        |-- chroma.sqlite3
                 |-- __pycache__
                     |-- github_rag_pipeline.cpython-314.pyc
             |-- pdf_rag
@@ -85,6 +104,7 @@
                 |-- websearch_tool.cpython-314.pyc
         |-- __pycache__
             |-- main.cpython-314.pyc
+    |-- Dockerfile
     |-- requirements.txt
 |-- client
     |-- .env
@@ -130,7 +150,9 @@
             |-- store.js
     |-- vite.config.js
 |-- server
+    |-- .dockerignore
     |-- .env
+    |-- Dockerfile
     |-- package-lock.json
     |-- package.json
     |-- src
