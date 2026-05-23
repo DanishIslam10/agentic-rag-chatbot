@@ -115,7 +115,6 @@ uploads/
 public/uploads/
 
 # AI / ML
-models/
 checkpoints/
 *.h5
 *.pt
