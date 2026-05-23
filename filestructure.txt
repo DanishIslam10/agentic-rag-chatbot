@@ -148,6 +148,7 @@
             |-- previousChatsSlice.js
         |-- store
             |-- store.js
+    |-- vercel.json
     |-- vite.config.js
 |-- server
     |-- .dockerignore
