@@ -25,7 +25,7 @@ function App() {
         withCredentials: true,
       });
 
-      // console.log("Restore Auth State Response:", response.data);
+      console.log("Restore Auth State Response:", response.data);
 
       if (response.data.success) {
         // Update auth state in Redux store
