@@ -10,4 +10,5 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["npm", "run", "dev"]
+# production start command
+CMD ["npm", "start"]
