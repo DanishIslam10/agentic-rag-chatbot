@@ -26,7 +26,7 @@ app.use("/api/v1/auth",authRouter)
 app.use("/api/v1/chat",chatRouter)
 
 app.get("/", (req, res) => {
-  res.send("Server is running");
+  res.send(`Server is running.\nCors domain: ${process.env.CLIENT_URL}`);
 });
 
 const PORT = process.env.PORT || 5000;
