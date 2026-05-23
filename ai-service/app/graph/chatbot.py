@@ -21,7 +21,7 @@ class ChatState(BaseModel):
     messages : Annotated[List[BaseMessage],add_messages]
 
 llm = ChatOpenAI(
-    model="gpt-4o-mini",
+    model="gpt-5-mini",
     streaming=True,
     temperature=0.7 
 ) 

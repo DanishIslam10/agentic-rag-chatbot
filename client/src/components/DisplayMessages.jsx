@@ -2,57 +2,207 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export default function DisplayMessage({ message, streamingMessageId }) {
+
     const isAiMessage = message?.role === "ai";
-    const isStreaming = isAiMessage && streamingMessageId === message._id;
+
+    const isStreaming =
+        isAiMessage &&
+        streamingMessageId === message._id;
 
     return (
-        <div className={`flex ${message?.role === "human" ? "justify-end" : "justify-start"} mb-4`}>
-            <style>{`
-                @keyframes aurora-glow {
-                    0%, 100% { filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.4)) drop-shadow(0 0 20px rgba(99, 102, 241, 0.2)); }
-                    50% { filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.6)) drop-shadow(0 0 30px rgba(99, 102, 241, 0.3)); }
-                }
-                @keyframes aurora-spin {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
-                }
-                .aurora-logo {
-                    animation: aurora-glow 3s ease-in-out infinite, aurora-spin 20s linear infinite;
-                }
-            `}</style>
-            <div className="flex max-w-[55vw] flex-col gap-3">
-                {isAiMessage && (
-                    <div className="flex items-center gap-3">
-                        <div className="aurora-logo relative inline-flex h-12 w-12 items-center justify-center">
-                            <div className="absolute inset-0 rounded-full bg-linear-to-br from-indigo-500 via-purple-500 to-pink-400 opacity-90" />
-                            <div className="absolute inset-1 rounded-full bg-slate-950/20 backdrop-blur-sm" />
-                            <span
-                                role="img"
-                                aria-label="aurora"
-                                title="Aurora"
-                                className="relative z-10 text-xl"
-                            >
-                                ✨
-                            </span>
-                        </div>
-                        {isStreaming && (
-                            <div className="flex items-center gap-2 rounded-3xl border border-white/10 bg-[#17ADA1]/15 px-4 py-3 text-sm text-white shadow-inner shadow-slate-950/10">
-                                <span className="h-2.5 w-2.5 rounded-full bg-white animate-pulse" />
-                                <span className="h-2.5 w-2.5 rounded-full bg-white animate-pulse" style={{ animationDelay: "0.15s" }} />
-                                <span className="h-2.5 w-2.5 rounded-full bg-white animate-pulse" style={{ animationDelay: "0.3s" }} />
-                                <span className="text-white/80">Aurora is typing...</span>
-                            </div>
-                        )}
-                    </div>
-                )}
 
-                {message?.content !== "" && (
-                    <div className={`rounded-3xl border border-white/10 px-5 py-5 shadow-xl shadow-slate-950/10 backdrop-blur-xl ${message?.role === "human" ? "bg-[#1249B0] text-white" : "bg-slate-950/80 text-slate-100"}`}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{message?.content}</ReactMarkdown>
-                    </div>
-                )}
+        <div
+            className={`
+                mb-4 flex w-full
+                ${message?.role === "human"
+                    ? "justify-end"
+                    : "justify-start"
+                }
+            `}
+        >
+
+            <style>{`
+
+                @keyframes aurora-glow {
+                    0%, 100% {
+                        filter:
+                            drop-shadow(0 0 10px rgba(168, 85, 247, 0.4))
+                            drop-shadow(0 0 20px rgba(99, 102, 241, 0.2));
+                    }
+
+                    50% {
+                        filter:
+                            drop-shadow(0 0 20px rgba(168, 85, 247, 0.6))
+                            drop-shadow(0 0 30px rgba(99, 102, 241, 0.3));
+                    }
+                }
+
+                @keyframes aurora-spin {
+                    from {
+                        transform: rotate(0deg);
+                    }
+
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+
+                .aurora-logo {
+                    animation:
+                        aurora-glow 3s ease-in-out infinite,
+                        aurora-spin 20s linear infinite;
+                }
+
+                /* MARKDOWN FIXES */
+
+                .markdown-content {
+                    min-width: 0;
+                    overflow-wrap: anywhere;
+                    word-break: break-word;
+                    white-space: pre-wrap;
+                }
+
+                .markdown-content pre {
+                    overflow-x: auto;
+                    max-width: 100%;
+                    padding: 12px;
+                    border-radius: 16px;
+                    background: rgba(15, 23, 42, 0.9);
+                }
+
+                .markdown-content code {
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                }
+
+                .markdown-content table {
+                    display: block;
+                    overflow-x: auto;
+                    max-width: 100%;
+                }
+
+                .markdown-content p,
+                .markdown-content li,
+                .markdown-content span {
+                    overflow-wrap: anywhere;
+                    word-break: break-word;
+                }
+
+            `}</style>
+
+            <div
+                className="
+                    flex min-w-0 max-w-[75%]
+                    flex-col gap-3
+                "
+            >
+
+                {
+                    isAiMessage && (
+                        <div className="flex items-center gap-3">
+
+                            <div
+                                className="
+                                    aurora-logo relative
+                                    inline-flex h-12 w-12
+                                    items-center justify-center
+                                "
+                            >
+                                <div
+                                    className="
+                                        absolute inset-0 rounded-full
+                                        bg-linear-to-br
+                                        from-indigo-500
+                                        via-purple-500
+                                        to-pink-400
+                                        opacity-90
+                                    "
+                                />
+
+                                <div
+                                    className="
+                                        absolute inset-1 rounded-full
+                                        bg-slate-950/20 backdrop-blur-sm
+                                    "
+                                />
+
+                                <span
+                                    role="img"
+                                    aria-label="aurora"
+                                    title="Aurora"
+                                    className="relative z-10 text-xl"
+                                >
+                                    ✨
+                                </span>
+
+                            </div>
+
+                            {
+                                isStreaming && (
+                                    <div
+                                        className="
+                                            flex items-center gap-2
+                                            rounded-3xl border border-white/10
+                                            bg-[#17ADA1]/15
+                                            px-4 py-3 text-sm text-white
+                                            shadow-inner shadow-slate-950/10
+                                        "
+                                    >
+                                        <span className="h-2.5 w-2.5 rounded-full bg-white animate-pulse" />
+
+                                        <span
+                                            className="h-2.5 w-2.5 rounded-full bg-white animate-pulse"
+                                            style={{ animationDelay: "0.15s" }}
+                                        />
+
+                                        <span
+                                            className="h-2.5 w-2.5 rounded-full bg-white animate-pulse"
+                                            style={{ animationDelay: "0.3s" }}
+                                        />
+
+                                        <span className="text-white/80">
+                                            Aurora is typing...
+                                        </span>
+
+                                    </div>
+                                )
+                            }
+
+                        </div>
+                    )
+                }
+
+                {
+                    message?.content !== "" && (
+
+                        <div
+                            className={`
+                                min-w-0 max-w-full
+                                overflow-hidden
+                                rounded-3xl border border-white/10
+                                px-5 py-5 shadow-xl
+                                shadow-slate-950/10
+                                backdrop-blur-xl
+                                markdown-content
+                                ${message?.role === "human"
+                                    ? "bg-[#1249B0] text-white"
+                                    : "bg-slate-950/80 text-slate-100"
+                                }
+                            `}
+                        >
+
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                            >
+                                {message?.content}
+                            </ReactMarkdown>
+
+                        </div>
+                    )
+                }
+
             </div>
+
         </div>
     );
 }
-      

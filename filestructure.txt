@@ -62,6 +62,18 @@
                         |-- ingestion.cpython-314.pyc
                         |-- loader.cpython-314.pyc
                         |-- splitter.cpython-314.pyc
+                |-- repos
+                    |-- airbnb-etl-with-qdrant
+                        |-- .gitignore
+                        |-- cleaning.py
+                        |-- raw_data
+                            |-- columns info.docx
+                            |-- ~$lumns info.docx
+                        |-- README.md
+                        |-- save_embeddings.py
+                        |-- semantic_search.py
+                        |-- tempCodeRunnerFile.python
+                        |-- Untitled.ipynb
                 |-- retrieval
                     |-- generation.py
                     |-- retrieval.py
@@ -75,6 +87,14 @@
                     |-- __pycache__
                         |-- generation.cpython-314.pyc
                         |-- retrieval.cpython-314.pyc
+                |-- vectorstore
+                    |-- chroma_db
+                        |-- 7d93e625-23af-4b95-9b1b-63eaed311a5a
+                            |-- data_level0.bin
+                            |-- header.bin
+                            |-- length.bin
+                            |-- link_lists.bin
+                        |-- chroma.sqlite3
                 |-- __pycache__
                     |-- github_rag_pipeline.cpython-314.pyc
             |-- pdf_rag
