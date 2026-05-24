@@ -130,7 +130,7 @@ export default function DisplayMessage({ message, streamingMessageId }) {
                                     role="img"
                                     aria-label="aurora"
                                     title="Aurora"
-                                    className="relative z-10 text-xl"
+                                    className="relative z-10 text-lg md:text-xl"
                                 >
                                     ✨
                                 </span>
@@ -144,7 +144,7 @@ export default function DisplayMessage({ message, streamingMessageId }) {
                                             flex items-center gap-2
                                             rounded-3xl border border-white/10
                                             bg-[#17ADA1]/15
-                                            px-4 py-3 text-sm text-white
+                                            px-4 py-3 text-sm md:text-lg text-white
                                             shadow-inner shadow-slate-950/10
                                         "
                                     >
@@ -181,6 +181,7 @@ export default function DisplayMessage({ message, streamingMessageId }) {
                                 overflow-hidden
                                 rounded-3xl border border-white/10
                                 px-5 py-5 shadow-xl
+                                text-sm md:text-lg
                                 shadow-slate-950/10
                                 backdrop-blur-xl
                                 markdown-content

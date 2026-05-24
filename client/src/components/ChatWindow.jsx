@@ -88,7 +88,7 @@ export default function ChatWindow() {
                         >
                             <h2
                                 className="
-                                    text-lg sm:text-xl md:text-2xl
+                                    text-sm sm:text-lg md:text-xl
                                     font-semibold text-white
                                 "
                             >
