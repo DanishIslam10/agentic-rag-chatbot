@@ -35,7 +35,7 @@ export default function ChatWindow() {
 
                     <div
                         className="
-                            flex h-[90vh]
+                            flex h-[85vh]
                             flex-col
                             rounded-2xl sm:rounded-3xl md:rounded-4xl
                             border border-white/10
