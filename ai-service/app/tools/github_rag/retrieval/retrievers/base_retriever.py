@@ -3,7 +3,7 @@ from langchain_chroma import Chroma
 from langsmith import traceable
 
 @traceable(name="get_base_retriever")
-def get_base_retriever(repo_hash:str,user_id:str,thread_id:str):
+def get_base_retriever(repo_hash:str):
 
     embedding_model = OpenAIEmbeddings(model="text-embedding-3-small")
 
@@ -16,11 +16,7 @@ def get_base_retriever(repo_hash:str,user_id:str,thread_id:str):
         search_kwargs={
             'k':10,
             "filter": {
-            "$and": [
-                {"repo_hash": repo_hash},
-                {"user_id": user_id},
-                {"chat_session": thread_id}
-            ]
+                "repo_hash": repo_hash
             }
         }
     )

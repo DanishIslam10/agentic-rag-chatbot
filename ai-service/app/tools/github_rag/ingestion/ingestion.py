@@ -16,7 +16,7 @@ GITHUB_REPO_FOLDER = Path("app/tools/github_rag/repos")
 
 
 @traceable(name="github_ingestion_pipeline")
-async def ingestion_pipeline(original_url: str,user_id: str,thread_id: str):
+async def ingestion_pipeline(original_url: str):
 
     try:
 
@@ -41,10 +41,7 @@ async def ingestion_pipeline(original_url: str,user_id: str,thread_id: str):
         repo_collection = db["repositories"]
 
         # check existing repo
-        repo = await repo_collection.find_one({
-            "repo_hash": repo_hash,
-            "user_id": user_id
-        })
+        repo = await repo_collection.find_one({"repo_hash": repo_hash})
 
         # already ingested
         if repo_path.exists() and repo:
@@ -78,8 +75,6 @@ async def ingestion_pipeline(original_url: str,user_id: str,thread_id: str):
                 repo_hash=repo_hash,
                 repo_name=repo_name,
                 repo_path=str(repo_path),
-                user_id=user_id,
-                thread_id=thread_id
             )
 
         except Exception as e:
@@ -96,7 +91,7 @@ async def ingestion_pipeline(original_url: str,user_id: str,thread_id: str):
         # load repository files
         try:
 
-            docs = load_repository(repo_path=repo_path,repo_hash=repo_hash,repo_name=repo_name,user_id=user_id,thread_id=thread_id)
+            docs = load_repository(repo_path=repo_path,repo_hash=repo_hash,repo_name=repo_name)
 
             if not docs:
 
@@ -135,7 +130,7 @@ async def ingestion_pipeline(original_url: str,user_id: str,thread_id: str):
         # update repository status
         try:
 
-            await update_doc(repo_hash=repo_hash,user_id=user_id)
+            await update_doc(repo_hash=repo_hash)
 
         except Exception as e:
 

@@ -20,7 +20,7 @@ export default function ChatWindow() {
     }, [messages, streamingMessageId]);
 
     return (
-        <div className="flex flex-col gap-4 w-full h-full bg-slate-950 px-6 py-6 text-white">
+        <div className="flex flex-col justify-between gap-4 w-full h-full bg-slate-950 px-6 py-6 text-white">
 
             {
                 messages.length === 0 ? (

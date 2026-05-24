@@ -19,7 +19,7 @@ ALLOWED_EXTENSIONS = {
 }
 
 @traceable(name="load_repository")
-def load_repository(repo_path: str,repo_hash:str,repo_name:str,user_id:str,thread_id:str):
+def load_repository(repo_path: str,repo_hash:str,repo_name:str):
 
     repo_path = Path(repo_path)
 
@@ -40,8 +40,6 @@ def load_repository(repo_path: str,repo_hash:str,repo_name:str,user_id:str,threa
                     doc.metadata["repo_path"] = str(file_path)
                     doc.metadata["repo_hash"] = str(repo_hash)
                     doc.metadata["repo_name"] = str(repo_name)
-                    doc.metadata["user_id"] = str(user_id)
-                    doc.metadata["chat_session"] = str(thread_id)
 
                 documents.extend(docs)
 

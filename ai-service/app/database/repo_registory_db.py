@@ -10,4 +10,4 @@ MONGODB_URI = os.getenv("MONGODB_URI")
 
 client = AsyncIOMotorClient(MONGODB_URI)
 
-db = client["ai-chatbot"]
+db = client["ai-chatbot-local"]

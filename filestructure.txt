@@ -89,7 +89,7 @@
                         |-- retrieval.cpython-314.pyc
                 |-- vectorstore
                     |-- chroma_db
-                        |-- 7d93e625-23af-4b95-9b1b-63eaed311a5a
+                        |-- 48070ec9-8450-4543-89e3-4b1d76e8ef36
                             |-- data_level0.bin
                             |-- header.bin
                             |-- length.bin

@@ -6,45 +6,51 @@ from app.schema.title_schema import TitleSchema
 from app.services.chat_title import chat_title_chain
 from typing import List
 from fastapi.responses import StreamingResponse
+from collections.abc import AsyncIterable
+from starlette.requests import ClientDisconnect
 
 router = APIRouter()
 
 
 @router.post("/api/ai-service/chat-message")
-async def chat(request: Request, data:MessageSchema):
-    
-    thread_id = data.thread_id
-    message = data.message
-    user_id = data.user_id
+async def chat(request: Request, data: MessageSchema):
+
+    chatbot_workflow = request.app.state.chatbot_workflow
 
     config = {
         "configurable": {
-            "thread_id": thread_id,
-            "user_id": user_id
+            "thread_id": data.thread_id,
         }
     }
 
-    chatbot_workflow = request.app.state.chatbot_workflow
-    
-    async def generate():
+    async def generate() -> AsyncIterable[str]:
 
-        async for event in chatbot_workflow.astream_events(
-            {
-                "messages": [
-                    HumanMessage(content=message)
-                ],
-            },
-            config=config,
-            version="v2"
-        ):
+        try:
 
-             if event["event"] == "on_chat_model_stream":
+            async for event in chatbot_workflow.astream_events(
+                {
+                    "messages": [
+                        HumanMessage(content=data.message)
+                    ]
+                },
+                config=config,
+                version="v2"
+            ):
 
-                chunk = event["data"]["chunk"]
+                if event["event"] == "on_chat_model_stream":
 
-                if chunk.content:
-                    yield chunk.content
-            
+                    chunk = event.get("data", {}).get("chunk")
+
+                    if chunk and chunk.content:
+                        yield chunk.content
+
+        except ClientDisconnect:
+            print("Client disconnected")
+
+        except Exception as e:
+            print("Streaming Error:", e)
+            yield "\n[STREAM_ERROR]"
+
     return StreamingResponse(
         generate(),
         media_type="text/plain"

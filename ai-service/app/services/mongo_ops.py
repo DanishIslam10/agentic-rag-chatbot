@@ -14,8 +14,6 @@ async def add_repo_doc(
     repo_hash: str,
     repo_name: str,
     repo_path: str,
-    user_id: str,
-    thread_id: str
 ):
 
     try:
@@ -26,11 +24,6 @@ async def add_repo_doc(
             "repo_hash": repo_hash,
             "repo_name": repo_name,
             "repo_path": str(repo_path),
-
-            "user_id": user_id,
-
-            "thread_id": thread_id,
-
             "status": "pending"
         }
 
@@ -60,16 +53,14 @@ async def add_repo_doc(
 
 @traceable(name="update_doc")
 async def update_doc(
-    repo_hash: str,
-    user_id: str
+    repo_hash: str
 ):
 
     try:
 
         result = await db["repositories"].update_one(
             {
-                "repo_hash": repo_hash,
-                "user_id": user_id
+                "repo_hash": repo_hash
             },
 
             {

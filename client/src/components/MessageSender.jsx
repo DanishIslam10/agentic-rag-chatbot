@@ -144,18 +144,26 @@ export default function MessageSender() {
 
 
     return (
-        <div className="relative flex items-center rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 shadow-inner backdrop-blur-xl transition-all duration-300 focus-within:border-cyan-400/40 focus-within:shadow-cyan-500/10">
+        <div className="flex items-center rounded-3xl border border-white/10 bg-slate-900/80 p-3 shadow-inner backdrop-blur-xl transition-all duration-300 focus-within:border-cyan-400/40 focus-within:shadow-cyan-500/10">
 
             <input
-                type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Message Aurora..."
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        sendMessageHandler();
+                    }
+                }}
+                placeholder="Message Aurora..."
                 className=" flex-1 bg-transparent pr-14 text-sm text-white  placeholder:text-slate-50 outline-none"
             />
 
-            <button onClick={sendMessageHandler} className=" group absolute right-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-r  from-cyan-400  via-teal-300  to-emerald-300  text-slate-900 shadow-lg  shadow-cyan-500/20  transition-all duration-300  hover:-translate-y-0.5  hover:shadow-cyan-400/40  active:scale-95">
+            <button onClick={sendMessageHandler} className=" group absolute right-3 flex p-2 h-8 w-10 cursor-pointer items-center justify-center rounded-full bg-gradient-to-r  from-cyan-400  via-teal-300  to-emerald-300  text-slate-900 shadow-lg  shadow-cyan-500/20  transition-all duration-300  hover:-translate-y-0.5  hover:shadow-cyan-400/40  active:scale-95">
 
                 <span className=" absolute inset-0 rounded-2xl  bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 " />
 
-                <SendHorizontal size={18} className="relative z-10" />
+                <SendHorizontal size={20} className="relative z-10" />
 
             </button>
 

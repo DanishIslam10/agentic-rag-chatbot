@@ -5,13 +5,13 @@ from app.services.url import generate_repo_hash,normalize_repo_url
 from langsmith import traceable
 
 @traceable(name="retrieval_pipeline")
-def retrieval_pipeline(query:str,url:str,user_id:str,thread_id:str):
+def retrieval_pipeline(query:str,url:str):
     
     normalized_repo_url = normalize_repo_url(url)
     
     repo_hash = generate_repo_hash(normalized_repo_url)
 
-    base = get_base_retriever(repo_hash,user_id,thread_id)
+    base = get_base_retriever(repo_hash)
 
     compressor = get_compression_retriever(base)
 

@@ -8,14 +8,9 @@ export const chatbotService = async (data) => {
         user_id: String(data.user_id)
     };
 
-    if (
-        !payload.message ||
-        !payload.thread_id ||
-        !payload.user_id
-    ) {
-        const error = new Error(
-            "message info for ai-chatbot-service is incomplete."
-        );
+    if (!payload.message || !payload.thread_id || !payload.user_id) {
+        
+        const error = new Error("message info for ai-chatbot-service is incomplete.");
 
         error.statusCode = 400;
 
@@ -24,25 +19,19 @@ export const chatbotService = async (data) => {
 
     try {
 
-        const response = await fetch(
-            `${process.env.AI_SERVICE_URL}/chat-message`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-            }
-        );
+        const response = await fetch(`${process.env.AI_SERVICE_URL}/chat-message`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
 
         return response;
 
     } catch (error) {
 
-        console.error(
-            "chatbot service error:\n",
-            error
-        );
+        console.error("chatbot service error:\n",error);
 
         throw error;
     }
