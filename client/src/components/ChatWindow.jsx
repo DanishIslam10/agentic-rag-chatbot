@@ -82,7 +82,8 @@ export default function ChatWindow() {
 
                         <div
                             className="
-                                mb-4 sm:mb-6
+                                hidden md:block
+                                md:mb-4 sm:mb-6
                                 rounded-2xl sm:rounded-3xl
                                 border border-white/10
                                 bg-slate-950/80
