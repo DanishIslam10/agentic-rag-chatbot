@@ -129,6 +129,7 @@
             |-- ChatWindow.jsx
             |-- DisplayMessages.jsx
             |-- EmptyChatWindow.jsx
+            |-- HamburgerButton.jsx
             |-- Icon.jsx
             |-- LogoutModal.jsx
             |-- MessageSender.jsx

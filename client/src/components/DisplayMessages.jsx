@@ -92,7 +92,7 @@ export default function DisplayMessage({ message, streamingMessageId }) {
 
             <div
                 className="
-                    flex min-w-0 max-w-[75%]
+                    flex min-w-0 md:max-w-[75%]
                     flex-col gap-3
                 "
             >
@@ -177,7 +177,7 @@ export default function DisplayMessage({ message, streamingMessageId }) {
 
                         <div
                             className={`
-                                min-w-0 max-w-full
+                                min-w-0  max-w-full
                                 overflow-hidden
                                 rounded-3xl border border-white/10
                                 px-5 py-5 shadow-xl
