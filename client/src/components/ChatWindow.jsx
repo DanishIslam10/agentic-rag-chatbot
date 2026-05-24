@@ -37,10 +37,7 @@ export default function ChatWindow() {
                         className="
                             flex h-[85vh]
                             flex-col
-                            rounded-2xl sm:rounded-3xl md:rounded-4xl
-                            border border-white/10
-                            bg-white/5
-                            p-3 sm:p-4
+                            rounded-2xl sm:rounded-3xl md:rounded-4xl   
                             shadow-2xl shadow-indigo-500/10
                             backdrop-blur-2xl
                         "
