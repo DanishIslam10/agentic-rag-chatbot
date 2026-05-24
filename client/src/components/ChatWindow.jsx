@@ -22,9 +22,7 @@ export default function ChatWindow() {
     return (
         <div
             className="
-                flex flex-col justify-between gap-4
-                w-full h-full
-                bg-slate-950 text-white
+                flex flex-col justify-between h-full gap-4
                 px-3 sm:px-4 md:px-6
                 py-3 md:py-6
             "
@@ -37,7 +35,7 @@ export default function ChatWindow() {
 
                     <div
                         className="
-                            flex h-[90vh] md:h-[86vh]
+                            flex h-[90vh]
                             flex-col
                             rounded-2xl sm:rounded-3xl md:rounded-4xl
                             border border-white/10

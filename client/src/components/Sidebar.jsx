@@ -143,7 +143,6 @@ export default function Sidebar() {
         relative z-10
         flex flex-col h-full
         overflow-y-auto
-        pr-2
         sidebar-scrollbar
     "
                 >

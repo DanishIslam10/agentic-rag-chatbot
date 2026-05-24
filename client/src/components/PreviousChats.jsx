@@ -106,7 +106,7 @@ export default function PreviousChats() {
     };
 
     return (
-        <div className="px-2 py-2">
+        <div className="md:p-2">
             <h2 className="text-lg font-semibold mb-4">Previous Chats</h2>
             {previousChats.length === 0 ? (
                 <p className="text-sm text-gray-400">No previous chats found.</p>) : (
@@ -118,7 +118,7 @@ export default function PreviousChats() {
                         >
                             <div
                                 onClick={() => handleChatClick(chat)}
-                                className="flex w-full items-center justify-between gap-3 p-4 text-left cursor-pointer"
+                                className="flex w-full items-center justify-between gap-3 px-4 py-2 text-left cursor-pointer"
                             >
                                 <span className="truncate">
                                     {chat.title.length > 20 ? `${chat.title.substring(0, 35)}...` : chat.title}
