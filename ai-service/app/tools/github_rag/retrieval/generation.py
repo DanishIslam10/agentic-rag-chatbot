@@ -8,7 +8,7 @@ from langsmith import traceable
 
 load_dotenv()
 
-llm = ChatOpenAI(model='gpt-4o-nano')
+llm = ChatOpenAI(model='gpt-4o-mini')
 
 
 
