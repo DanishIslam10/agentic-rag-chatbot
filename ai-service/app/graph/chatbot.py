@@ -11,40 +11,70 @@ from app.tools.github_rag.github_rag_pipeline import github_rag_tool
 from langgraph.prebuilt import ToolNode, tools_condition
 from dotenv import load_dotenv
 from app.prompts.system_prompt import SYSTEM_PROMPT
+from psycopg_pool import AsyncConnectionPool
 import os
 
-load_dotenv()
+
 
 DB_URI = os.getenv("DB_URI")
 
+
 class ChatState(BaseModel):
-    messages : Annotated[List[BaseMessage],add_messages]
+    messages: Annotated[List[BaseMessage], add_messages]
+
 
 llm = ChatOpenAI(
     model="gpt-4o-mini",
     streaming=True,
-    temperature=0.7 
-) 
+    temperature=0.7,
+)
 
-
-tools = [search_tool,github_rag_tool]
+tools = [search_tool, github_rag_tool]
 
 llm_with_tools = llm.bind_tools(tools)
 
 
-async def chat_node(state:ChatState):
-    
+async def chat_node(state: ChatState):
+
     messages = [
         SystemMessage(content=SYSTEM_PROMPT),
         *state.messages,
     ]
-    
-    # print("User's query: \n",user_messages)
+
     response = await llm_with_tools.ainvoke(messages)
-    # print("llm response: \n",response)
-    return {"messages":[response]}
+
+    return {
+        "messages": [response]
+    }
+
+
+# GLOBAL CONNECTION POOL
+pool = AsyncConnectionPool(
+    conninfo=DB_URI,
+
+    min_size=1,
+    max_size=20,
+
+    open=False,
+
+    max_lifetime=3600,
+
+    kwargs={
+        "autocommit": True,
+
+        # optional but recommended
+        "keepalives": 1,
+        "keepalives_idle": 30,
+        "keepalives_interval": 10,
+        "keepalives_count": 5,
+    }
+)
+
 
 async def build_graph():
+
+    # OPEN POOL
+    await pool.open()
 
     graph = StateGraph(ChatState)
 
@@ -63,16 +93,8 @@ async def build_graph():
 
     graph.add_edge("tools", "chat_node")
 
-    # Async checkpointer
-    checkpointer_cm = (
-        AsyncPostgresSaver.from_conn_string(
-            DB_URI
-        )
-    )
-
-    checkpointer = (
-        await checkpointer_cm.__aenter__()
-    )
+    # CHECKPOINTER USING POOL
+    checkpointer = AsyncPostgresSaver(pool)
 
     await checkpointer.setup()
 
@@ -80,4 +102,4 @@ async def build_graph():
         checkpointer=checkpointer
     )
 
-    return workflow, checkpointer_cm
+    return workflow

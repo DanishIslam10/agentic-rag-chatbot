@@ -1,29 +1,34 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-
-from app.routes import chat
-from app.graph.chatbot import build_graph
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-    
+from app.routes import chat
+
+from app.graph.chatbot import (
+    build_graph,
+    pool
+)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    workflow, checkpointer_cm = await build_graph()
+    # OPEN CONNECTION POOL
+    await pool.open()
 
+    # BUILD WORKFLOW
+    workflow = await build_graph()
+
+    # STORE IN APP STATE
     app.state.chatbot_workflow = workflow
-
-    app.state.checkpointer_cm = checkpointer_cm
 
     yield
 
-    await checkpointer_cm.__aexit__(
-        None,
-        None,
-        None
-    )
+    # CLOSE CONNECTION POOL
+    await pool.close()
 
 
 app = FastAPI(
@@ -31,6 +36,7 @@ app = FastAPI(
 )
 
 app.include_router(chat.router)
+
 
 @app.get("/")
 async def root():
