@@ -1,12 +1,11 @@
 import { Sparkles } from "lucide-react";
+import Logo from "./Logo";
 
 export default function EmptyChatWindow() {
     return (
-        <div className="flex w-full h-full items-center justify-center bg-slate-950 md:px-6 md:py-12 text-center text-white">
-            <div className="flex flex-col justify-center w-full h-full max-w-5xl my-4">
-                <div className="mb-6 mx-auto flex h-16 md:h-20 w-16 md:w-20 items-center justify-center rounded-3xl bg-linear-to-br from-indigo-500 via-purple-500 to-pink-400 shadow-xl shadow-purple-500/20">
-                    <Sparkles className="h-10 w-10 text-white" />
-                </div>
+        
+            <div className="flex flex-col justify-center items-center text-center w-full h-full max-w-5xl my-4 py-4 px-6">
+                <Logo />
 
                 <h1 className="mb-1 md:mb-3 text-2xl md:text-3xl font-bold tracking-tight text-white">
                     Welcome to Aurora
@@ -39,6 +38,6 @@ export default function EmptyChatWindow() {
                     </div>
                 </div>
             </div>
-        </div>
+    
     );
 }

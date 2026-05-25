@@ -1,84 +1,87 @@
-import { signupService, loginService } from "../services/auth.service.js";
+import User from "../models/User.js";
+import { clerkClient } from "@clerk/express";
 
-export const signup = async (req, res) => {
-    try {
+export const syncUser = async (req, res) => {
 
-        const result = await signupService(req.body);
+  try {
 
-        return res.status(201).json({
-            success: true,
-            ...result
-        })
+    /*
+    |--------------------------------------------------------------------------
+    | Clerk Auth
+    |--------------------------------------------------------------------------
+    */
 
-    } catch (error) {
+    const auth = req.auth();
 
-        return res.status(error.statusCode || 500).json({
-            success: false,
-            message: error.message,
-        });
 
-    }
-}
+    const clerkId = auth.userId;
 
-export const login = async (req, res) => {
-    try {
+    /*
+    |--------------------------------------------------------------------------
+    | Existing User
+    |--------------------------------------------------------------------------
+    */
 
-        const result = await loginService(req.body);
+    const existingUser = await User.findOne({
+      clerkId,
+    });
 
-        res.cookie(
-            "token",
-            result.token,
-            {
-                httpOnly: true,
+    if (existingUser) {
 
-                secure: true,
-
-                sameSite: "none",
-
-                maxAge: 7 * 24 * 60 * 60 * 1000,
-            }
-        );
-
-        return res.status(200).json({
-            success: true,
-            ...result,
-        });
-
-    } catch (error) {
-
-        return res.status(error.statusCode || 500).json({
-            success: false,
-            message: error.message,
-        });
+      return res.status(200).json({
+        success: true,
+        user: existingUser,
+      });
 
     }
-};
 
-export const restoreAuthState = async (req, res) => {
-    try {
-        const token = req.cookies.token;
-        // Add logic to verify the token and restore the authentication state
-        res.status(200).json({
-            success: true,
-            message: "Authentication state restored successfully",
-            user: req.user, // Assuming the authMiddleware attaches the user data to the request object
-        });
-    } catch (error) {
-        console.error("Error restoring auth state:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-};
+    /*
+    |--------------------------------------------------------------------------
+    | Fetch Clerk User
+    |--------------------------------------------------------------------------
+    */
 
-export const logout = async (req, res) => {
-    try {
-        res.clearCookie("token", {  
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-        });
-        res.status(200).json({ success: true, message: "Logged out successfully" });
-    } catch (error) {
-        console.error("Error during logout:", error);
-        res.status(500).json({ success: false, message: "Internal server error" });
-    }
+    const clerkUser = await clerkClient.users.getUser(
+      clerkId
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Extract Data
+    |--------------------------------------------------------------------------
+    */
+
+    const email =
+      clerkUser.emailAddresses[0]?.emailAddress;
+
+    const name =
+      `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create MongoDB User
+    |--------------------------------------------------------------------------
+    */
+
+    const user = await User.create({
+      clerkId,
+      email,
+      name,
+    });
+
+    return res.status(201).json({
+      success: true,
+      user,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
 };

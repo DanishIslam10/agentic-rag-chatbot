@@ -1,16 +1,39 @@
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useAuth } from "@clerk/react";
 
 export default function ProtectedRoute({ children }) {
 
-    // Example auth check
-    const {isLoggedIn} = useSelector((state) => state.auth);
+    const { isLoaded, isSignedIn } = useAuth();
 
-    // If user NOT logged in
-    if (!isLoggedIn) {
-        return <Navigate to="/login" />;
+    /*
+    |--------------------------------------------------------------------------
+    | Prevent UI Flash While Clerk Loads
+    |--------------------------------------------------------------------------
+    */
+
+    if (!isLoaded) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-[#030712]">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-cyan-400 border-t-transparent"></div>
+            </div>
+        );
     }
 
-    // If logged in
+    /*
+    |--------------------------------------------------------------------------
+    | Redirect Unauthenticated Users
+    |--------------------------------------------------------------------------
+    */
+
+    if (!isSignedIn) {
+        return <Navigate to="/" replace />;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticated User
+    |--------------------------------------------------------------------------
+    */
+
     return children;
 }

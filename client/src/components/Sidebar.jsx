@@ -1,36 +1,37 @@
-import axios from 'axios';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import Icon from './Icon';
 import LogoutModal from './LogoutModal';
 import NewChatButton from './NewChatBtn';
 import PreviousChats from './PreviousChats';
 import HamburgerButton from './HamburgerButton';
-import { logout } from '../slices/authSlice';
+import { useClerk } from "@clerk/react";
 
 export default function Sidebar() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleLogout = async () => {
-        try {
-            const SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
-            const url = `${SERVER_ENDPOINT}/auth/logout`;
+    const { signOut } = useClerk();
 
-            await axios.get(url, {
-                withCredentials: true,
-            });
+    const handleLogout = async () => {
+
+        try {
+
+            await signOut();
 
             setIsModalOpen(false);
-            dispatch(logout());
-            navigate('/');
+
+            navigate("/");
+
         } catch (error) {
-            console.error('Error during logout:', error);
+
+            console.error(
+                "Error during logout:",
+                error
+            );
+
         }
     };
 
@@ -50,7 +51,6 @@ export default function Sidebar() {
     h-screen
     text-white
     overflow-hidden
-    p-4
 
     bg-gradient-to-b
     from-[#071827]
@@ -141,13 +141,14 @@ export default function Sidebar() {
                 <div
                     className="
         relative z-10
+        p-2
         flex flex-col h-full
         overflow-y-auto
         sidebar-scrollbar
     "
                 >
                     {/* Top Section */}
-                    <div className="flex items-center justify-between">
+                    <div className=" m-3  flex items-center justify-between">
                         <Icon />
                         <div className="flex items-center gap-2">
                             {/* Close Button */}

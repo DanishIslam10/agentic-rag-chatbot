@@ -144,7 +144,7 @@ export default function MessageSender() {
 
 
     return (
-        <div className="flex items-center rounded-3xl border border-white/10 bg-slate-900/80 p-3 shadow-inner backdrop-blur-xl transition-all duration-300 focus-within:border-cyan-400/40 focus-within:shadow-cyan-500/10">
+        <div className="flex items-center mb-3 rounded-3xl border border-white/10 bg-slate-900/80 p-3 shadow-inner backdrop-blur-xl transition-all duration-300 focus-within:border-cyan-400/40 focus-within:shadow-cyan-500/10">
 
             <input
                 type="text"

@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const { Schema } = mongoose
 
 const schema = Schema({
-    userId: {
+    clerkId: {
         type: String,
         required: true,
         unique: true
@@ -16,10 +16,6 @@ const schema = Schema({
         type: String,
         required: true,
         unique: true
-    },
-    password: {
-        type: String,
-        required: true
     },
     chats:[{
         type:mongoose.Types.ObjectId,

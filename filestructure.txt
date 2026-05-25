@@ -126,11 +126,13 @@
             |-- vite.svg
         |-- components
             |-- ActiveChatTitle.jsx
+            |-- AuthSync.jsx
             |-- ChatWindow.jsx
             |-- DisplayMessages.jsx
             |-- EmptyChatWindow.jsx
             |-- HamburgerButton.jsx
             |-- Icon.jsx
+            |-- Logo.jsx
             |-- LogoutModal.jsx
             |-- MessageSender.jsx
             |-- NewChatBtn.jsx
@@ -140,11 +142,9 @@
         |-- index.css
         |-- main.jsx
         |-- pages
+            |-- Auth.jsx
             |-- Chat.jsx
-            |-- Login.jsx
-            |-- SignUp.jsx
         |-- slices
-            |-- authSlice.js
             |-- messagesSlice.js
             |-- previousChatsSlice.js
         |-- store

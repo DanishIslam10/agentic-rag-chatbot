@@ -22,9 +22,7 @@ export default function ChatWindow() {
     return (
         <div
             className="
-                flex flex-col justify-between h-full gap-4
-                px-3 sm:px-4 md:px-6
-                py-3 md:py-6
+                flex flex-col justify-between h-full gap-4 md:p-4
             "
         >
 
@@ -35,7 +33,7 @@ export default function ChatWindow() {
 
                     <div
                         className="
-                            flex h-[85vh]
+                            flex h-[90vh] md:h-[85vh]
                             flex-col
                             rounded-2xl sm:rounded-3xl md:rounded-4xl   
                             shadow-2xl shadow-indigo-500/10
@@ -75,39 +73,7 @@ export default function ChatWindow() {
                             }
                         `}</style>
 
-                        <div
-                            className="
-                                hidden md:block
-                                md:mb-4 sm:mb-6
-                                rounded-2xl sm:rounded-3xl
-                                border border-white/10
-                                bg-slate-950/80
-                                p-4 sm:p-5 md:p-6
-                                shadow-inner shadow-slate-950/20
-                            "
-                        >
-                            <h2
-                                className="
-                                    text-sm sm:text-lg md:text-xl
-                                    font-semibold text-white
-                                "
-                            >
-                                Aurora Chat
-                            </h2>
-
-                            <p
-                                className="
-                                    mt-2
-                                    max-w-2xl
-                                    text-xs sm:text-sm
-                                    leading-6 sm:leading-7
-                                    text-slate-300
-                                "
-                            >
-                                Continue your conversation, or ask anything
-                                and receive streaming AI responses in real time.
-                            </p>
-                        </div>
+                       
 
                         <div
                             className="

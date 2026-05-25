@@ -1,52 +1,52 @@
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 
-const authMiddleware = async (req, res, next) => {
+// const authMiddleware = async (req, res, next) => {
 
-  try {
+//   try {
 
-    // Get token from cookies
+//     // Get token from cookies
 
-    const token = req.cookies.token;
+//     const token = req.cookies.token;
 
-    // console.log("Token from cookies:", token);
+//     // console.log("Token from cookies:", token);
 
-    // Check if token exists
+//     // Check if token exists
 
-    if (!token) {
+//     if (!token) {
 
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized access",
-      });
-    }
+//       return res.status(401).json({
+//         success: false,
+//         message: "Unauthorized access",
+//       });
+//     }
 
-    // Verify token
+//     // Verify token
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
+//     const decoded = jwt.verify(
+//       token,
+//       process.env.JWT_SECRET
+//     );
 
-    // console.log("decoded user: ",decoded)
+//     // console.log("decoded user: ",decoded)
 
-    // Attach user data to request object
+//     // Attach user data to request object
 
-    req.user = decoded;
-
-
-
-    next();
-
-  } catch (error) {
-
-    return res.status(401).json({
-      success: false,
-      message: "Invalid or expired token",
-    });
-
-  }
-};
+//     req.user = decoded;
 
 
 
-export default authMiddleware;
+//     next();
+
+//   } catch (error) {
+
+//     return res.status(401).json({
+//       success: false,
+//       message: "Invalid or expired token",
+//     });
+
+//   }
+// };
+
+
+
+// export default authMiddleware;

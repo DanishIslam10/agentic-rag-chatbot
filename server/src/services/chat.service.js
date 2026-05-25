@@ -4,14 +4,20 @@ import User from "../models/User.js"
 import Message from "../models/Message.js";
 import mongoose from "mongoose";
 
-export const createChatService = async (id,title) => {
+export const createChatService = async (clerkId, title) => {
 
-  if (!id) {
-    const error = new Error("User id is required");
-    error.statusCode = 400;
+  const existingUser = await User.findOne({
+    clerkId,
+  });
+
+  if (!existingUser) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
     throw error;
   }
 
+  const id = existingUser._id;
+  
   // Generate unique session id
   // This will also be used as LangGraph thread_id
   const sessionId = crypto.randomUUID();
@@ -36,7 +42,19 @@ export const createChatService = async (id,title) => {
 };
 
 
-export const getPreviousChatsService = async (id) => {
+export const getPreviousChatsService = async (clerkId) => {
+
+  const existingUser = await User.findOne({
+    clerkId,
+  });
+
+  if (!existingUser) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const id = existingUser._id;
 
   if (!id) {
     const error = new Error("User id is required");
@@ -51,9 +69,21 @@ export const getPreviousChatsService = async (id) => {
 };
 
 
-export const deleteChatService = async (userId, chatId) => {
+export const deleteChatService = async (clerkId, chatId) => {
 
-  if (!userId) {  
+  const existingUser = await User.findOne({
+    clerkId,
+  });
+
+  if (!existingUser) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const userId = existingUser._id;
+
+  if (!userId) {
     const error = new Error("User id is required");
     error.statusCode = 400;
     throw error;

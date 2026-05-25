@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@clerk/express": "^2.1.21",
     "@langchain/core": "^1.1.45",
     "@langchain/langgraph": "^1.3.0",
     "@langchain/openai": "^1.4.5",

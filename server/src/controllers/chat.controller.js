@@ -1,30 +1,32 @@
 import { createChatService } from "../services/chat.service.js"
-import { getPreviousChatsService,deleteChatService } from "../services/chat.service.js"
+import { getPreviousChatsService, deleteChatService } from "../services/chat.service.js"
 import { getChatTitleService } from "../services/chatTitle.service.js"
 
 export const createChat = async (req, res) => {
 
     const human_message = req?.body?.content;
 
-    if(!human_message || human_message.trim() === "") {
+    if (!human_message || human_message.trim() === "") {
 
         return res.status(400).json({
             success: false,
             message: "Human message is required to create a chat"
-        })  
+        })
     }
 
     try {
 
-        const id = req.user.id;
-
         const chatTitle = await getChatTitleService(human_message);
 
-        const chatDoc = await createChatService(id,chatTitle);
+        const auth = req.auth();
+
+        const clerkId = auth.userId;
+
+        const chatDoc = await createChatService(clerkId, chatTitle);
 
         return res.status(201).json({
             success: true,
-            chat:chatDoc
+            chat: chatDoc
         })
 
     } catch (error) {
@@ -42,11 +44,13 @@ export const createChat = async (req, res) => {
 
 export const getPreviousChats = async (req, res) => {
 
+    const auth = req.auth();
+
+    const clerkId = auth.userId;
+
     try {
 
-        const result = await getPreviousChatsService(
-            req.user.id
-        )   
+        const result = await getPreviousChatsService(clerkId)
 
         return res.status(200).json({
             success: true,
@@ -77,9 +81,13 @@ export const deleteChat = async (req, res) => {
         })
     }
 
+    const auth = req.auth();
+
+    const clerkId = auth.userId;
+
     try {
-        await deleteChatService(req.user.id,chatId);
-        return res.status(200).json({   
+        await deleteChatService(clerkId, chatId);
+        return res.status(200).json({
             success: true,
             message: "Chat deleted successfully"
         })
