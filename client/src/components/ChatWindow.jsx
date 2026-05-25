@@ -27,7 +27,7 @@ export default function ChatWindow() {
         >
 
             {
-                messages.length === 0 ? (
+                messages?.length === 0 ? (
                     <EmptyChatWindow />
                 ) : (
 

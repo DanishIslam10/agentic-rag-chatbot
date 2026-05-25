@@ -108,7 +108,7 @@ export default function PreviousChats() {
     return (
         <div className="md:p-2">
             <h2 className="text-lg font-semibold mb-4">Previous Chats</h2>
-            {previousChats.length === 0 ? (
+            {previousChats?.length === 0 ? (
                 <p className="text-sm text-gray-400">No previous chats found.</p>) : (
                 <ul className="space-y-3">
                     {previousChats.map((chat) => (
@@ -121,7 +121,7 @@ export default function PreviousChats() {
                                 className="flex w-full items-center justify-between gap-3 px-4 py-2 text-left cursor-pointer"
                             >
                                 <span className="truncate">
-                                    {chat.title.length > 20 ? `${chat.title.substring(0, 35)}...` : chat.title}
+                                    {chat?.title?.length > 20 ? `${chat.title.substring(0, 35)}...` : chat.title}
                                 </span>
                                 <button
                                     type="button"
