@@ -43,7 +43,7 @@ export default function AuthSync() {
 
         syncUser();
 
-    }, [isLoaded, isSignedIn, user]);
+    }, [isLoaded, isSignedIn]);
 
     return null;
 }
