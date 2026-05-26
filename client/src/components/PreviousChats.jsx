@@ -111,7 +111,7 @@ export default function PreviousChats() {
             {previousChats?.length === 0 ? (
                 <p className="text-sm text-gray-400">No previous chats found.</p>) : (
                 <ul className="space-y-3">
-                    {previousChats.map((chat) => (
+                    {previousChats?.map((chat) => (
                         <li
                             key={chat._id}
                             className={`rounded-2xl text-sm transition duration-200 ease-in-out ${activeChatId === chat._id ? 'bg-[#263A5E]' : 'bg-[#14233c] hover:bg-[#263A5E]'}`}

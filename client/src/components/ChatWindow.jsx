@@ -86,7 +86,7 @@ export default function ChatWindow() {
                             "
                         >
                             {
-                                messages.map((message, index) => (
+                                messages?.map((message, index) => (
                                     <DisplayMessages
                                         key={index}
                                         message={message}
