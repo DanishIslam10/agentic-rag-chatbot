@@ -16,7 +16,7 @@ const previousChatsSlice = createSlice({
         },
         removePreviousChat: (state, action) => {
             state.previousChats = state.previousChats?.filter(
-                (chat) => chat._id !== action.payload
+                (chat) => chat?._id !== action.payload
             );
         },
         clearPreviousChats: (state) => {

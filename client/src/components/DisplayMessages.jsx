@@ -7,7 +7,7 @@ export default function DisplayMessage({ message, streamingMessageId }) {
 
     const isStreaming =
         isAiMessage &&
-        streamingMessageId === message._id;
+        streamingMessageId === message?._id;
 
     return (
 

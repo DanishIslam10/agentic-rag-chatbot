@@ -33,7 +33,7 @@ const messagesSlice = createSlice({
       const { _id, content } = action.payload;
 
       const message = state.messages.find(
-        (msg) => msg._id === _id
+        (msg) => msg?._id === _id
       );
 
       if (message) {
@@ -45,7 +45,7 @@ const messagesSlice = createSlice({
 
       const { _id, newMessage } = action.payload;
       const index = state.messages.findIndex(
-        (msg) => msg._id === _id
+        (msg) => msg?._id === _id
       );
       if (index !== -1) {
         state.messages[index] = newMessage;

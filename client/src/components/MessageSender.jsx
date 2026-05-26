@@ -31,12 +31,12 @@ export default function MessageSender() {
                 withCredentials: true,
             });
             const newChat = response.data.chat;
-            dispatch(setActiveChatId(newChat._id));
-            dispatch(setActiveSessionId(newChat.sessionId));
+            dispatch(setActiveChatId(newChat?._id));
+            dispatch(setActiveSessionId(newChat?.sessionId));
             dispatch(addPreviousChat(newChat));
 
-            humanMessage.chat = newChat._id;
-            humanMessage.sessionId = newChat.sessionId;
+            humanMessage.chat = newChat?._id;
+            humanMessage.sessionId = newChat?.sessionId;
         }
 
         // console.log("Human Message to be sent:", humanMessage);
@@ -62,7 +62,7 @@ export default function MessageSender() {
             content: ""
         };
 
-        dispatch(setStreamingMessageId(tempAiMessage._id))
+        dispatch(setStreamingMessageId(tempAiMessage?._id))
 
         // console.log("Temp AI Message created and added to store, now sending human message to chatbot for AI response...", tempAiMessage);
 
@@ -105,7 +105,7 @@ export default function MessageSender() {
                 aiText += chunk;
 
                 dispatch(updateMessage({
-                    _id: tempAiMessage._id,
+                    _id: tempAiMessage?._id,
                     content: aiText
                 }));
             }
@@ -124,7 +124,7 @@ export default function MessageSender() {
             });
 
             dispatch(replaceMessage({
-                _id: tempAiMessage._id,
+                _id: tempAiMessage?._id,
                 newMessage: aiMessageResponse.data.message
             }));
 
@@ -133,7 +133,7 @@ export default function MessageSender() {
         } catch (error) {
             console.error("Error in sending message to chatbot or receiving response:", error);
             dispatch(updateMessage({
-                _id: tempAiMessage._id,
+                _id: tempAiMessage?._id,
                 content: "Error in getting response from AI. Please try again."
             }));
             dispatch(setStreamingMessageId(null));

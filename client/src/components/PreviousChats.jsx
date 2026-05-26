@@ -47,7 +47,7 @@ export default function PreviousChats() {
 
             const response = await axios.get(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/chat-session-history`, {
                 params: {
-                    chatId: chat._id
+                    chatId: chat?._id
                 },
                 withCredentials: true,
             });
@@ -58,8 +58,8 @@ export default function PreviousChats() {
 
             dispatch(clearMessages());
             dispatch(addMessages(chatSessionHistory));
-            dispatch(setActiveChatId(chat._id));
-            dispatch(setActiveSessionId(chat.sessionId));
+            dispatch(setActiveChatId(chat?._id));
+            dispatch(setActiveSessionId(chat?.sessionId));
 
         } catch (error) {
             console.error("Error handling chat click:", error);
@@ -87,9 +87,9 @@ export default function PreviousChats() {
     const confirmDelete = async () => {
         if (!selectedDeleteChat) return;
 
-        dispatch(removePreviousChat(selectedDeleteChat._id));
+        dispatch(removePreviousChat(selectedDeleteChat?._id));
 
-        if (activeChatId === selectedDeleteChat._id) {
+        if (activeChatId === selectedDeleteChat?._id) {
             dispatch(clearMessages());
             dispatch(setActiveChatId(null));
             dispatch(setActiveSessionId(null));
@@ -99,7 +99,7 @@ export default function PreviousChats() {
         setIsConfirmOpen(false);
 
         await axios.delete(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/delete-chat`, {
-            data: { chatId: selectedDeleteChat._id },
+            data: { chatId: selectedDeleteChat?._id },
             withCredentials: true,
         });
 
@@ -113,7 +113,7 @@ export default function PreviousChats() {
                 <ul className="space-y-3">
                     {previousChats?.map((chat) => (
                         <li
-                            key={chat._id}
+                            key={chat?._id}
                             className={`rounded-2xl text-sm transition duration-200 ease-in-out ${activeChatId === chat._id ? 'bg-[#263A5E]' : 'bg-[#14233c] hover:bg-[#263A5E]'}`}
                         >
                             <div
