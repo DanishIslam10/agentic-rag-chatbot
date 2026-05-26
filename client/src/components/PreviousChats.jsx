@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { addPreviousChats, removePreviousChat } from "../slices/previousChatsSlice";
 import { addMessages, clearMessages, setActiveChatId, setActiveSessionId } from "../slices/messagesSlice";
+import { useAuth } from '@clerk/react';
 
 export default function PreviousChats() {
 
     const dispatch = useDispatch();
+
+    const { getToken } = useAuth();
 
     const { previousChats } = useSelector((state) => state.previousChats);
     const { messages, activeChatId, activeSessionId } = useSelector((state) => state.messages);
@@ -16,9 +19,16 @@ export default function PreviousChats() {
 
     async function getPreviousChats() {
 
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/previous-chats`, {
-            withCredentials: true,
-        });
+        const token = await getToken();
+
+        const response = await axios.get(
+            `${import.meta.env.VITE_SERVER_ENDPOINT}/chat/previous-chats`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
 
         // console.log("Previous Chats:", response.data.chats);
 
@@ -45,12 +55,20 @@ export default function PreviousChats() {
 
         try {
 
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/chat-session-history`, {
-                params: {
-                    chatId: chat?._id
-                },
-                withCredentials: true,
-            });
+            const token = await getToken();
+
+            const response = await axios.get(
+                `${import.meta.env.VITE_SERVER_ENDPOINT}/chat/chat-session-history`,
+                {
+                    params: {
+                        chatId: chat?._id,
+                    },
+
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             const chatSessionHistory = response.data.messages;
 
@@ -98,10 +116,20 @@ export default function PreviousChats() {
         setSelectedDeleteChat(null);
         setIsConfirmOpen(false);
 
-        await axios.delete(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/delete-chat`, {
-            data: { chatId: selectedDeleteChat?._id },
-            withCredentials: true,
-        });
+        const token = await getToken();
+
+        await axios.delete(
+            `${import.meta.env.VITE_SERVER_ENDPOINT}/chat/delete-chat`,
+            {
+                data: {
+                    chatId: selectedDeleteChat?._id,
+                },
+
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
 
     };
 
