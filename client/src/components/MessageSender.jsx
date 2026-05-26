@@ -10,7 +10,7 @@ import { useAuth } from '@clerk/react';
 export default function MessageSender() {
 
     const [message, setMessage] = useState("");
-    
+
     const { getToken } = useAuth();
     const dispatch = useDispatch();
 
@@ -49,10 +49,10 @@ export default function MessageSender() {
 
         // saving human meessage to mongodb only 
         const response = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/save-message-doc`, humanMessage, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
         // the saved human message document returned from the server, which is then added to the redux store
         const humanMessageDoc = response?.data?.message;
@@ -81,14 +81,18 @@ export default function MessageSender() {
         try {
 
 
+            const token = await getToken();
+
             const aiResponse = await fetch(
                 `${import.meta.env.VITE_SERVER_ENDPOINT}/chat/message`,
                 {
                     method: "POST",
+
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
-                    credentials: "include",
+
                     body: JSON.stringify(humanMessage),
                 }
             );
