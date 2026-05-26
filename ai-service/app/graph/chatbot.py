@@ -52,17 +52,19 @@ async def chat_node(state: ChatState):
 pool = AsyncConnectionPool(
     conninfo=DB_URI,
 
-    min_size=1,
+    min_size=0,
     max_size=20,
 
     open=False,
 
     max_lifetime=3600,
+    max_idle=300,
+
+    check=AsyncConnectionPool.check_connection,
 
     kwargs={
         "autocommit": True,
 
-        # optional but recommended
         "keepalives": 1,
         "keepalives_idle": 30,
         "keepalives_interval": 10,
@@ -72,9 +74,6 @@ pool = AsyncConnectionPool(
 
 
 async def build_graph():
-
-    # OPEN POOL
-    await pool.open()
 
     graph = StateGraph(ChatState)
 

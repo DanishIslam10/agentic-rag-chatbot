@@ -7,10 +7,7 @@ from fastapi import FastAPI
 
 from app.routes import chat
 
-from app.graph.chatbot import (
-    build_graph,
-    pool
-)
+from app.graph.chatbot import build_graph,pool
 
 
 @asynccontextmanager
@@ -31,9 +28,7 @@ async def lifespan(app: FastAPI):
     await pool.close()
 
 
-app = FastAPI(
-    lifespan=lifespan
-)
+app = FastAPI(lifespan=lifespan)
 
 app.include_router(chat.router)
 
