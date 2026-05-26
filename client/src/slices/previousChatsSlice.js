@@ -12,7 +12,7 @@ const previousChatsSlice = createSlice({
             state.previousChats = action.payload;
         },
         addPreviousChat: (state, action) => {
-            state.previousChats.unshift(action.payload);
+            state.previousChats?.unshift(action.payload);
         },
         removePreviousChat: (state, action) => {
             state.previousChats = state.previousChats?.filter(
