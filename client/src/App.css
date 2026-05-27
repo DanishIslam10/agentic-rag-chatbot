@@ -171,6 +171,6 @@ td {
 
 /* Streaming */
 
-.streaming-content {
-    white-space: pre-wrap;
+.streaming-content > *:last-child {
+    margin-bottom: 0 !important;
 }
