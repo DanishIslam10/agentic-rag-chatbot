@@ -211,6 +211,7 @@ export default function MessageSender() {
         bg-slate-900/80
         px-4
         py-3
+        mx-4
         shadow-inner
         backdrop-blur-xl
         transition-all duration-300
