@@ -30,6 +30,8 @@ export default function MessageSender() {
 
         const token = await getToken();
 
+        // console.log("Clerk token obtained in MessageSender:", token);
+
         if (!activeChatId || !activeSessionId) {
             const response = await axios.post(`${import.meta.env.VITE_SERVER_ENDPOINT}/chat/new-chat`, { content: message }, {
                 headers: {
@@ -83,18 +85,20 @@ export default function MessageSender() {
 
             const token = await getToken();
 
-            const aiResponse = await fetch(
-                `${import.meta.env.VITE_SERVER_ENDPOINT}/chat/message`,
-                {
-                    method: "POST",
+            const url = `${import.meta.env.VITE_SERVER_ENDPOINT}/chat/message`;
 
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
+            console.log("Sending message to chatbot at URL:", url);
 
-                    body: JSON.stringify(humanMessage),
-                }
+            const aiResponse = await fetch(url, {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+
+                body: JSON.stringify(humanMessage),
+            }
             );
 
             const reader = aiResponse.body.getReader();
@@ -102,6 +106,8 @@ export default function MessageSender() {
             const decoder = new TextDecoder();
 
             let aiText = "";
+            let buffer = "";
+            let pendingText = "";
 
             while (true) {
 
@@ -109,12 +115,45 @@ export default function MessageSender() {
 
                 if (done) break;
 
+                buffer += decoder.decode(value, { stream: true });
 
-                const chunk = decoder.decode(value);
+                const events = buffer.split("\n\n");
 
-                // console.log("Received chunk from chatbot:", chunk);
+                buffer = events.pop();
 
-                aiText += chunk;
+                for (const event of events) {
+
+                    const lines = event.split("\n");
+
+                    for (const line of lines) {
+
+                        if (line.startsWith("data: ")) {
+
+                            const text = line.slice(6);
+
+                            pendingText += text;
+                        }
+                    }
+                }
+
+                // update UI less frequently
+                if (pendingText.length > 20) {
+
+                    aiText += pendingText;
+
+                    pendingText = "";
+
+                    dispatch(updateMessage({
+                        _id: tempAiMessage?._id,
+                        content: aiText
+                    }));
+                }
+            }
+
+            // flush remaining text
+            if (pendingText) {
+
+                aiText += pendingText;
 
                 dispatch(updateMessage({
                     _id: tempAiMessage?._id,

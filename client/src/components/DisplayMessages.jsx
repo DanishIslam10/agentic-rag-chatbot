@@ -1,7 +1,10 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-export default function DisplayMessage({ message, streamingMessageId }) {
+export default function DisplayMessage({
+    message,
+    streamingMessageId
+}) {
 
     const isAiMessage = message?.role === "ai";
 
@@ -53,26 +56,47 @@ export default function DisplayMessage({ message, streamingMessageId }) {
                         aurora-spin 20s linear infinite;
                 }
 
-                /* MARKDOWN FIXES */
-
                 .markdown-content {
                     min-width: 0;
                     overflow-wrap: anywhere;
                     word-break: break-word;
-                    white-space: pre-wrap;
+                    line-height: 1.7;
                 }
 
                 .markdown-content pre {
                     overflow-x: auto;
                     max-width: 100%;
-                    padding: 12px;
+                    padding: 16px;
                     border-radius: 16px;
                     background: rgba(15, 23, 42, 0.9);
+                    margin-top: 12px;
+                    margin-bottom: 12px;
                 }
 
                 .markdown-content code {
-                    white-space: pre-wrap;
                     word-break: break-word;
+                }
+
+                .markdown-content p {
+                    margin-bottom: 14px;
+                }
+
+                .markdown-content ul,
+                .markdown-content ol {
+                    padding-left: 24px;
+                    margin-bottom: 16px;
+                }
+
+                .markdown-content li {
+                    margin-bottom: 8px;
+                }
+
+                .markdown-content h1,
+                .markdown-content h2,
+                .markdown-content h3 {
+                    margin-top: 20px;
+                    margin-bottom: 12px;
+                    font-weight: 700;
                 }
 
                 .markdown-content table {
@@ -81,11 +105,9 @@ export default function DisplayMessage({ message, streamingMessageId }) {
                     max-width: 100%;
                 }
 
-                .markdown-content p,
-                .markdown-content li,
-                .markdown-content span {
-                    overflow-wrap: anywhere;
-                    word-break: break-word;
+                .streaming-content {
+                    white-space: pre-wrap;
+                    line-height: 1.7;
                 }
 
             `}</style>
@@ -177,14 +199,13 @@ export default function DisplayMessage({ message, streamingMessageId }) {
 
                         <div
                             className={`
-                                min-w-0  max-w-full
+                                min-w-0 max-w-full
                                 overflow-hidden
                                 rounded-3xl border border-white/10
                                 px-5 py-5 shadow-xl
                                 text-sm md:text-md
                                 shadow-slate-950/10
                                 backdrop-blur-xl
-                                markdown-content
                                 ${message?.role === "human"
                                     ? "bg-[#1249B0] text-white"
                                     : "bg-slate-950/80 text-slate-100"
@@ -192,11 +213,31 @@ export default function DisplayMessage({ message, streamingMessageId }) {
                             `}
                         >
 
-                            <ReactMarkdown
-                                remarkPlugins={[remarkGfm]}
-                            >
-                                {message?.content}
-                            </ReactMarkdown>
+                            {
+                                isAiMessage && isStreaming ? (
+
+                                    <div className="markdown-content streaming-content">
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                        >
+                                            {message?.content}
+                                        </ReactMarkdown>
+                                    </div>
+
+                                ) : (
+
+                                    <div className="markdown-content">
+
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                        >
+                                            {message?.content}
+                                        </ReactMarkdown>
+
+                                    </div>
+
+                                )
+                            }
 
                         </div>
                     )

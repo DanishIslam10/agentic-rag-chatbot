@@ -42,7 +42,7 @@ async def chat(request: Request, data: MessageSchema):
                     chunk = event.get("data", {}).get("chunk")
 
                     if chunk and chunk.content:
-                        yield chunk.content
+                        yield f"data: {chunk.content}\n\n"
 
         except ClientDisconnect:
             print("Client disconnected")
@@ -52,8 +52,13 @@ async def chat(request: Request, data: MessageSchema):
             yield "\n[STREAM_ERROR]"
 
     return StreamingResponse(
-        generate(),
-        media_type="text/plain"
+    generate(),
+    media_type="text/event-stream",
+    headers={
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+        }
     )
 
     

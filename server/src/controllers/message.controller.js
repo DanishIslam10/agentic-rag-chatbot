@@ -1,11 +1,13 @@
 import { createChatService } from "../services/chat.service.js";
 import { chatbotService } from "../services/chatbot.service.js";
 import { getChatTitleService } from "../services/chatTitle.service.js";
-import { createMessageService,getChatSessionHistoryService } from "../services/message.service.js";
+import { createMessageService, getChatSessionHistoryService } from "../services/message.service.js";
 
 export const sendMessage = async (req, res) => {
 
     const humanMessage = req.body;
+
+    // console.log("Received message from client:", humanMessage);
 
     try {
 
@@ -16,10 +18,17 @@ export const sendMessage = async (req, res) => {
         }
 
         //It Tell browser: Incoming data is plain text
-        res.setHeader("Content-Type","text/plain");
-
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache, no-transform");
+        res.setHeader("Connection", "keep-alive");
         //It Tell browser: Response will arrive in chunks over time so Don't wait for the whole response, start processing as it comes
-        res.setHeader("Transfer-Encoding","chunked");
+        res.setHeader("Transfer-Encoding", "chunked");
+
+        res.flushHeaders();
+
+        res.socket?.setNoDelay(true);
+
+        res.flushHeaders();
 
         // getReader() method of ReadableStream interface returns a reader that can be used to read the stream. It provides a way to read the stream's data in chunks, allowing for efficient handling of large data or streaming responses.
         const reader = aiResponse.body.getReader();
@@ -35,10 +44,12 @@ export const sendMessage = async (req, res) => {
             if (done) break;
 
             // The decode() method of the TextDecoder interface takes a chunk of binary data (like the value received from the reader) and decodes it into a string. The { stream: true } option tells the decoder that this is part of a stream of data, allowing it to handle cases where a character might be split across chunks.
-            const chunk = decoder.decode(value, {stream: true }); 
+            const chunk = decoder.decode(value, { stream: true });
 
             // res.write() method is used to send a chunk of data to the client. In this case, it sends the decoded chunk of text from the AI response to the browser as it is received, allowing for real-time streaming of the response.
             res.write(chunk);
+
+            res.flush?.();
         }
 
         // res.end() method is used to signal that the response is complete and no more data will be sent. It tells the browser that the streaming of the AI response has finished.
@@ -46,7 +57,7 @@ export const sendMessage = async (req, res) => {
 
     } catch (error) {
 
-        console.error("Streaming error:",error);
+        console.error("Streaming error:", error);
 
         // IMPORTANT:
         // don't send json after stream starts
@@ -91,7 +102,7 @@ export const getChatSessionHistory = async (req, res) => {
             message: error.message
         })
     }
-}   
+}
 
 
 export const saveMessageDoc = async (req, res) => {

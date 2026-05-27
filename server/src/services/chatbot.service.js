@@ -5,7 +5,7 @@ export const chatbotService = async (data) => {
     const payload = {
         message: data.content,
         thread_id: data.sessionId,
-        user_id: String(data.user_id)
+        user_id: String(data.userId)
     };
 
     if (!payload.message || !payload.thread_id || !payload.user_id) {

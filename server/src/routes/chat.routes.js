@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(clerkMiddleware());
 
 router.post("/new-chat",requireAuth(),createChat);
-router.post("/message",requireAuth(),sendMessage);
+router.post("/message",sendMessage);
 
 router.get("/previous-chats",requireAuth(),getPreviousChats);
 
