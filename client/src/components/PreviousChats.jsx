@@ -154,7 +154,7 @@ export default function PreviousChats() {
                                 <button
                                     type="button"
                                     onClick={(event) => openDeleteConfirm(chat, event)}
-                                    className="inline-flex h-9 w-9 items-center justify-center cursor-pointer rounded-full bg-white/10 text-slate-200 transition hover:bg-white/20 hover:text-white"
+                                    className="inline-flex h-6 w-8 md:h-9 md:w-9 items-center justify-center cursor-pointer rounded-full bg-white/10 text-slate-200 transition hover:bg-white/20 hover:text-white"
                                     aria-label={`Delete chat ${chat.title}`}
                                 >
                                     <Trash2 size={16} />

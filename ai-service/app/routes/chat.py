@@ -8,6 +8,7 @@ from typing import List
 from fastapi.responses import StreamingResponse
 from collections.abc import AsyncIterable
 from starlette.requests import ClientDisconnect
+import json
 
 router = APIRouter()
 
@@ -42,7 +43,7 @@ async def chat(request: Request, data: MessageSchema):
                     chunk = event.get("data", {}).get("chunk")
 
                     if chunk and chunk.content:
-                        yield f"data: {chunk.content}\n\n"
+                        yield f"data: {json.dumps(chunk.content)}\n\n"
 
         except ClientDisconnect:
             print("Client disconnected")

@@ -129,7 +129,11 @@ export default function MessageSender() {
 
                         if (line.startsWith("data: ")) {
 
-                            const text = line.slice(6);
+                            const jsonText = line.slice(6);
+
+                            if (jsonText === "[DONE]") continue;
+
+                            const text = JSON.parse(jsonText);
 
                             pendingText += text;
                         }
@@ -137,7 +141,7 @@ export default function MessageSender() {
                 }
 
                 // update UI less frequently
-                if (pendingText.length > 20) {
+                if (pendingText.length > 5) {
 
                     aiText += pendingText;
 
@@ -197,27 +201,107 @@ export default function MessageSender() {
 
 
     return (
-        <div className="flex items-center mb-3 rounded-3xl border border-white/10 bg-slate-900/80 p-3 shadow-inner backdrop-blur-xl transition-all duration-300 focus-within:border-cyan-400/40 focus-within:shadow-cyan-500/10">
+        <div
+            className="
+        relative
+        flex items-end
+        mb-3
+        rounded-3xl
+        border border-white/10
+        bg-slate-900/80
+        px-4
+        py-3
+        shadow-inner
+        backdrop-blur-xl
+        transition-all duration-300
+        focus-within:border-cyan-400/40
+        focus-within:shadow-cyan-500/10
+    "
+        >
 
-            <input
-                type="text"
+            <textarea
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+
+                onChange={(e) => {
+
+                    setMessage(e.target.value);
+
+                    // reset height first
+                    e.target.style.height = "auto";
+
+                    // set new height
+                    e.target.style.height =
+                        Math.min(e.target.scrollHeight, 160) + "px";
+                }}
+
                 onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+
+                    if (e.key === "Enter" && !e.shiftKey) {
+
+                        e.preventDefault();
+
                         sendMessageHandler();
                     }
                 }}
+
+                rows={1}
+
                 placeholder="Message Aurora..."
-                className=" flex-1 bg-transparent pr-14 text-sm text-white  placeholder:text-slate-50 outline-none"
+
+                className="
+            w-full
+            resize-none
+            overflow-y-auto
+            bg-transparent
+            pr-16
+            text-sm
+            text-white
+            placeholder:text-slate-400
+            outline-none
+            leading-6
+
+            min-h-6
+            max-h-40
+
+            scrollbar-thin
+        "
             />
 
-            <button onClick={sendMessageHandler} className=" group absolute right-3 flex p-2 h-8 w-10 cursor-pointer items-center justify-center rounded-full bg-gradient-to-r  from-cyan-400  via-teal-300  to-emerald-300  text-slate-900 shadow-lg  shadow-cyan-500/20  transition-all duration-300  hover:-translate-y-0.5  hover:shadow-cyan-400/40  active:scale-95">
+            <button
+                onClick={sendMessageHandler}
 
-                <span className=" absolute inset-0 rounded-2xl  bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 " />
+                className="
+            absolute
+           
+            right-3
+            bottom-0
 
-                <SendHorizontal size={20} className="relative z-10" />
+            p-2
+            m-2
+            mr-0
 
+            cursor-pointer
+ 
+            items-center
+            justify-center
+
+            rounded-full
+
+            bg-linear-to-r
+            from-cyan-400
+            via-teal-300
+            to-emerald-300
+
+            text-slate-900
+
+            transition-all
+            duration-100
+
+            hover:scale-105
+            active:scale-95
+        "
+            >
+                <SendHorizontal size={20} />
             </button>
 
         </div>
