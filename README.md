@@ -21,35 +21,134 @@ The system allows users to interact with an intelligent chatbot that can retriev
 
 ### 🧠 Agentic Workflow
 
-* Uses an agent-based architecture for intelligent tool selection.
-* Decides when to retrieve information and when to respond directly.
-* Supports multi-step reasoning and tool execution.
+The chatbot uses an agent-based architecture powered by LangGraph and LangChain to intelligently decide how a user query should be processed.
 
-### 📚 RAG Pipeline
+Instead of directly sending every query to the LLM, the agent:
 
-* Semantic document retrieval.
-* Context injection before response generation.
-* Improved factual accuracy and reduced hallucinations.
+* Understands the intent of the user.
+* Decides whether retrieval is required.
+* Chooses which tools should be executed.
+* Performs multi-step reasoning when necessary.
+
+For example:
+
+* Simple conversational questions may be answered directly by the LLM.
+* Repository-related questions can trigger the GitHub RAG pipeline.
+* Real-time questions can invoke the web search tool.
+
+This makes the system more dynamic, scalable, and context-aware compared to traditional chatbot architectures.
+
+---
+
+### 📚 Retrieval-Augmented Generation (RAG)
+
+The application uses a Retrieval-Augmented Generation pipeline to provide grounded and context-aware responses.
+
+Instead of relying only on the LLM’s pretrained knowledge, the system:
+
+1. Retrieves relevant information from external knowledge sources.
+2. Injects the retrieved context into the prompt.
+3. Generates responses based on the retrieved data.
+
+Key capabilities:
+
+* Semantic similarity search using embeddings.
+* Context-aware response generation.
+* Reduced hallucinations.
+* Improved factual accuracy.
+
+This approach allows the chatbot to answer questions using actual repository data and documentation.
+
+---
 
 ### 🐙 GitHub Repository RAG
 
-* Query GitHub repositories.
-* Retrieve relevant code snippets and project documentation.
-* Answer repository-specific questions.
+The chatbot can analyze GitHub repositories and answer repository-specific questions.
+
+#### Workflow:
+
+1. User submits a GitHub repository URL.
+2. The system checks whether the repository is already indexed.
+3. If not indexed:
+
+   * Repository cloning is performed.
+   * Files are parsed and chunked.
+   * Embeddings are generated.
+   * Data is stored in the vector database.
+4. User queries are converted into embeddings.
+5. Semantic retrieval fetches relevant code and documentation.
+6. Retrieved context is passed to the LLM for grounded response generation.
+
+The chatbot can:
+
+* Explain project architecture.
+* Analyze codebases.
+* Retrieve relevant code snippets.
+* Summarize documentation.
+* Answer implementation-specific questions.
+
+This enables repository-aware AI conversations instead of generic responses.
+
+---
 
 ### 🌐 Web Search Integration
 
-* Fetches external information when local knowledge is insufficient.
-* Enhances response quality using real-time data.
+The application includes web search capabilities for handling queries that require real-time or external information.
+
+When the agent determines that local knowledge is insufficient, it can:
+
+* Perform external web searches.
+* Retrieve relevant information.
+* Combine search results with LLM reasoning.
+
+This allows the chatbot to:
+
+* Access updated information.
+* Improve answer quality.
+* Handle dynamic and real-world queries.
+
+The web search tool works alongside the RAG pipeline to provide more complete responses.
+
+---
 
 ### 💬 Conversational Memory
 
-* Maintains chat context across interactions.
-* Supports follow-up questions.
+The chatbot maintains conversational context across interactions to support natural multi-turn conversations.
+
+Instead of treating every message independently, the system:
+
+* Stores conversation history.
+* Understands follow-up questions.
+* Maintains contextual continuity.
+
+Example:
+
+* User: “Explain the authentication flow.”
+* User: “Where is JWT validation implemented?”
+
+The chatbot understands that the second question refers to the previously discussed repository context.
+
+This improves user experience and enables more human-like interactions.
+
+---
 
 ### ⚡ Streaming Responses
 
-* Real-time token streaming for a better user experience.
+The application supports real-time streaming responses for faster and more interactive conversations.
+
+Instead of waiting for the complete response to generate:
+
+* Tokens are streamed incrementally.
+* Users receive output in real time.
+* Perceived latency is reduced.
+
+Streaming improves:
+
+* User experience.
+* Responsiveness.
+* Interaction smoothness.
+
+The streaming pipeline is implemented using FastAPI streaming responses and integrated with the frontend for live token rendering.
 
 ---
 
