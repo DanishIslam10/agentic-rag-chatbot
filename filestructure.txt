@@ -16,6 +16,7 @@
             |-- chatbot.py
             |-- __pycache__
                 |-- chatbot.cpython-314.pyc
+                |-- visualize_graph.cpython-314.pyc
         |-- main.py
         |-- prompts
             |-- system_prompt.py
@@ -121,6 +122,7 @@
         |-- App.css
         |-- App.jsx
         |-- assets
+            |-- architecture.png
             |-- hero.png
             |-- react.svg
             |-- vite.svg
