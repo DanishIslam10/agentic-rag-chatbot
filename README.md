@@ -159,68 +159,7 @@ The streaming pipeline is implemented using FastAPI streaming responses and inte
 
 ## 🏗️ Architecture
 
-```text
-                         ┌──────────────────────┐
-                         │        User          │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                    ┌────────────────────────────┐
-                    │     Frontend (React)       │
-                    │  Vite • Tailwind • Axios   │
-                    └──────────┬─────────────────┘
-                               │ HTTP/WebSocket
-                               ▼
-                 ┌────────────────────────────────┐
-                 │ Backend API (Node.js/Express) │
-                 │ Authentication • Routing •    │
-                 │ Session/Cookie Management     │
-                 └──────────┬────────────────────┘
-                            │ API Calls
-                            ▼
-              ┌───────────────────────────────────┐
-              │ AI Service (FastAPI + Pydantic)  │
-              │ Request Validation • Streaming   │
-              │ AI Orchestration Layer           │
-              └──────────┬────────────────────────┘
-                         │
-                         ▼
-      ┌─────────────────────────────────────────────────┐
-      │      Agent Orchestration Layer                 │
-      │                                                 │
-      │  LangGraph • LangChain • LangSmith             │
-      │                                                 │
-      │  ┌──────────────────────────────────────────┐   │
-      │  │              LLM Reasoning              │   │
-      │  └──────────────────────────────────────────┘   │
-      │                                                 │
-      │  ┌──────────────────────────────────────────┐   │
-      │  │            Tool Execution               │   │
-      │  │                                          │   │
-      │  │  • GitHub RAG Tool                      │   │
-      │  │  • Web Search Tool                      │   │
-      │  │  • Retrieval Pipeline                   │   │
-      │  └──────────────────────────────────────────┘   │
-      └──────────┬──────────────────────────────────────┘
-                 │
-                 ▼
-      ┌─────────────────────────────────────────────┐
-      │     Vector Database / Knowledge Base        │
-      │                                             │
-      │ Embeddings • Chunked Docs • Repo Data       │
-      └──────────┬──────────────────────────────────┘
-                 │ Retrieved Context
-                 ▼
-      ┌─────────────────────────────────────────────┐
-      │            Large Language Model             │
-      │         Context-Aware Response Generation   │
-      └──────────┬──────────────────────────────────┘
-                 │
-                 ▼
-      ┌─────────────────────────────────────────────┐
-      │        Streaming AI Response to User        │
-      └─────────────────────────────────────────────┘
-```
+![System Architecture](.client/source/assets/architecture.png)
 
 ---
 
