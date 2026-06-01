@@ -91,6 +91,37 @@ This enables repository-aware AI conversations instead of generic responses.
 
 ---
 
+### 📄 PDF Document RAG
+
+The chatbot can analyze PDF documents and answer document-specific questions using a Retrieval-Augmented Generation (RAG) pipeline.
+
+#### Workflow:
+
+1. User uploads a PDF document.
+2. The system checks whether the document is already indexed.
+3. If not indexed:
+
+   * PDF text extraction is performed.
+   * Content is cleaned and preprocessed.
+   * Text is chunked into smaller segments.
+   * Embeddings are generated for each chunk.
+   * Data is stored in the ChromaDB vector database.
+4. User queries are converted into embeddings.
+5. Semantic retrieval fetches the most relevant document chunks.
+6. Retrieved context is passed to the LLM for grounded response generation.
+
+The chatbot can:
+
+* Summarize PDF documents.
+* Answer document-specific questions.
+* Retrieve relevant sections from large PDFs.
+* Explain technical or research documents.
+* Extract important insights and information.
+
+This enables intelligent document-aware conversations instead of generic AI responses.
+
+---
+
 ### 🌐 Web Search Integration
 
 The application includes web search capabilities for handling queries that require real-time or external information.
