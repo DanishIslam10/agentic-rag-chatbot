@@ -150,6 +150,11 @@ Streaming improves:
 
 The streaming pipeline is implemented using FastAPI streaming responses and integrated with the frontend for live token rendering.
 
+### 🗂️ Multi-Session Chat Support
+* Supports multiple independent chat sessions.
+* Maintains separate conversational context for each session.
+* Allows users to seamlessly switch between conversations while preserving chat history.
+
 ---
 
 ## 🏗️ Architecture
