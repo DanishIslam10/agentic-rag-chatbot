@@ -159,7 +159,7 @@ The streaming pipeline is implemented using FastAPI streaming responses and inte
 
 ## 🏗️ Architecture
 
-![System Architecture](.client/source/assets/architecture.png)
+![System Architecture](./client/src/assets/architecture.png)
 
 ---
 
