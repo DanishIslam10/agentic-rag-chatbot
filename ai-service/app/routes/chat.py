@@ -38,11 +38,22 @@ async def chat(request: Request, data: MessageSchema):
                 version="v2"
             ):
 
-                if event["event"] == "on_chat_model_stream":
+                event_type = event.get("event")
+                metadata = event.get("metadata", {})
+
+                # IMPORTANT
+                current_node = metadata.get("langgraph_node")
+
+                # ONLY stream assistant response from chat_node
+                if (
+                    event_type == "on_chat_model_stream"
+                    and current_node == "chat_node"
+                ):
 
                     chunk = event.get("data", {}).get("chunk")
 
                     if chunk and chunk.content:
+
                         yield f"data: {json.dumps(chunk.content)}\n\n"
 
         except ClientDisconnect:
@@ -50,15 +61,15 @@ async def chat(request: Request, data: MessageSchema):
 
         except Exception as e:
             print("Streaming Error:", e)
-            yield "\n[STREAM_ERROR]"
+            yield "data: [STREAM_ERROR]\n\n"
 
     return StreamingResponse(
-    generate(),
-    media_type="text/event-stream",
-    headers={
-        "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
-        "X-Accel-Buffering": "no",
+        generate(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
         }
     )
 

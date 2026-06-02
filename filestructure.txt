@@ -153,6 +153,7 @@
             |-- store.js
     |-- vercel.json
     |-- vite.config.js
+|-- README.md
 |-- server
     |-- .dockerignore
     |-- .env
