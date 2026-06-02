@@ -43,6 +43,8 @@ Aurora follows a distributed microservice architecture:
 
 ## GitHub RAG Pipeline
 
+```
+
 User submits GitHub URL
         │
         ▼
@@ -104,9 +106,10 @@ User submits GitHub URL
 │         ↓                                │
 │  generate_answer() → final response      │
 └──────────────────────────────────────────┘
-```
 
+```
 ---
+
 
 ## SSE Streaming Flow
 
