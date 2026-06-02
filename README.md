@@ -18,16 +18,31 @@ Most chatbot tutorials wrap an LLM in a simple prompt loop. Aurora is architectu
 
 ---
 
-## System Architecture
+:::writing{variant="document" id="58241"}
+## 🏗️ System Architecture
 
-```
----
-![System Architecture](./client/src/assets/architecture.png)
+<p align="center">
+  <img 
+    src="./client/src/assets/architecture.png" 
+    alt="Aurora System Architecture"
+    width="100%"
+  />
+</p>
+
+Aurora follows a distributed microservice architecture:
+
+- **Frontend (React + Redux)** → Handles UI and streaming updates
+- **Express Backend** → Authentication, chat persistence, SSE proxy
+- **FastAPI AI Service** → LangGraph orchestration, tools, RAG pipeline
+- **ChromaDB** → Vector storage for repository embeddings
+- **MongoDB** → Chats, messages, repository registry
+- **PostgreSQL** → LangGraph persistent memory checkpoints
+:::
+
 ---
 
 ## GitHub RAG Pipeline
 
-```
 User submits GitHub URL
         │
         ▼
