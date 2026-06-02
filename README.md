@@ -18,7 +18,6 @@ Most chatbot tutorials wrap an LLM in a simple prompt loop. Aurora is architectu
 
 ---
 
-:::writing{variant="document" id="58241"}
 ## 🏗️ System Architecture
 
 <p align="center">
