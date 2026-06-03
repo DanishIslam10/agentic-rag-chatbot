@@ -24,7 +24,6 @@
                 |-- system_prompt.cpython-314.pyc
         |-- routes
             |-- chat.py
-            |-- github_rag.py
             |-- __pycache__
                 |-- chat.cpython-314.pyc
                 |-- github_rag.cpython-314.pyc
