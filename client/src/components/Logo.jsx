@@ -8,8 +8,8 @@ export default function Logo() {
             <div className="absolute inset-0 rounded-3xl bg-cyan-400/30 blur-xl"></div>
 
             {/* Icon */}
-            <div className="relative">
-                <Bot className="h-9 w-9 text-white" />
+            <div >
+                <Bot className="h-14 w-14 text-white" />
             </div>
 
             {/* Floating Sparkles */}

@@ -11,6 +11,8 @@ export default function MessageSender() {
 
     const [message, setMessage] = useState("");
 
+    const [loading, setLoading] = useState(false)
+
     const { getToken } = useAuth();
     const dispatch = useDispatch();
 
@@ -19,6 +21,8 @@ export default function MessageSender() {
     const sendMessageHandler = async () => {
 
         if (message.trim() === "") return;
+
+        setLoading(true)
 
         //build humanMessage object to be sent to the server
         let humanMessage = {
@@ -186,6 +190,7 @@ export default function MessageSender() {
             }));
 
             dispatch(setStreamingMessageId(null));
+            setLoading(false);
 
         } catch (error) {
             console.error("Error in sending message to chatbot or receiving response:", error);
@@ -194,31 +199,18 @@ export default function MessageSender() {
                 content: "Error in getting response from AI. Please try again."
             }));
             dispatch(setStreamingMessageId(null));
+            setLoading(false);
         }
+
+        setLoading(false);
 
         // console.log("Message Send aiResponse:", aiMessageResponse.data.message);
     };
 
 
     return (
-        <div
-            className="
-        relative
-        flex items-end
-        mb-3
-        rounded-3xl
-        border border-white/10
-        bg-slate-900/80
-        px-4
-        py-3
-        mx-4
-        shadow-inner
-        backdrop-blur-xl
-        transition-all duration-300
-        focus-within:border-cyan-400/40
-        focus-within:shadow-cyan-500/10
-    "
-        >
+        <div className="relative flex items-end mb-3 rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 mx-4 shadow-inner 
+        backdrop-blur-xl transition-all duration-300 focus-within:border-cyan-400/40 focus-within:shadow-cyan-500/10">
 
             <textarea
                 value={message}
@@ -249,61 +241,23 @@ export default function MessageSender() {
 
                 placeholder="Message Aurora..."
 
-                className="
-            w-full
-            resize-none
-            overflow-y-auto
-            bg-transparent
-            pr-16
-            text-sm
-            text-white
-            placeholder:text-slate-400
-            outline-none
-            leading-6
+                className="w-full resize-none overflow-y-auto bg-transparent pr-16 text-sm text-white placeholder:text-slate-400 outline-none
+                 leading-6 min-h-6 max-h-40 scrollbar-thin"/>
 
-            min-h-6
-            max-h-40
-
-            scrollbar-thin
-        "
-            />
-
-            <button
-                onClick={sendMessageHandler}
-
-                className="
-            absolute
-           
-            right-3
-            bottom-0
-
-            p-2
-            m-2
-            mr-0
-
-            cursor-pointer
- 
-            items-center
-            justify-center
-
-            rounded-full
-
-            bg-linear-to-r
-            from-cyan-400
-            via-teal-300
-            to-emerald-300
-
-            text-slate-900
-
-            transition-all
-            duration-100
-
-            hover:scale-105
-            active:scale-95
-        "
-            >
-                <SendHorizontal size={20} />
-            </button>
+            {
+                loading ? (
+                    <div className="absolute right-3 bottom-0 p-2 m-2 mr-0">
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-400 border-t-transparent"></div>
+                    </div>
+                ) : (
+                    <button
+                        onClick={sendMessageHandler}
+                        className="absolute right-3 bottom-0 p-2 m-2 mr-0 cursor-pointer items-center justify-center rounded-full bg-linear-to-r from-cyan-400 via-teal-300 to-emerald-300 text-slate-900 transition-all duration-100 hover:scale-105 active:scale-95"
+                    >
+                        <SendHorizontal size={20} />
+                    </button>
+                )
+            }
 
         </div>
     );
